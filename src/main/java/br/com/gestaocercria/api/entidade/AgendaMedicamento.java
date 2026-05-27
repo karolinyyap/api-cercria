@@ -12,22 +12,14 @@ import jakarta.persistence.*;
 public class AgendaMedicamento {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+    private Integer id;
     private String data;
-
     private String horario;
-
     private Integer dose;
-
     private String motivo;
-
     private String status;
-
     private String motivoNaoTomou;
-
     private String dataBaixa;
-
     private String observacao;
 
     @ManyToOne

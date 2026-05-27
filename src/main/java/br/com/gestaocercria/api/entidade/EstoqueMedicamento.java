@@ -23,12 +23,15 @@ public class EstoqueMedicamento {
     private int id;
     private int quantidade;
     private int quantidade_atual;
-    private Date dataValidade;
+    private String dataValidade;
     private String origem;
-    private String responsavel;
-    private Date dataEntrada;
+    private String dataEntrada;
 
     @ManyToOne
     @JoinColumn(name = "medicamento_id")
     private Medicamento medicamento;
+
+    @ManyToOne
+    @JoinColumn(name = "funcionario_id")
+    private Funcionario responsavel;
 }

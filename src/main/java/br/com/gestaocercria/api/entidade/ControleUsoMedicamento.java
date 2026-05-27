@@ -13,27 +13,16 @@ public class ControleUsoMedicamento {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private Integer dose;
-
     private Integer intervalo;
-
     private String iniciandoEm;
-
     private Integer vezesAoDia;
-
     private String horarioFixo;
-
     private String diasSemana;
-
     private String dataInicio;
-
     private String dataFim;
-
     private Boolean usoContinuo;
-
     private String observacao;
-
     private Boolean ativo = true;
 
     @ManyToOne

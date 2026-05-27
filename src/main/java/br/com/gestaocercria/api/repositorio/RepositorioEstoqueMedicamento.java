@@ -10,4 +10,6 @@ import br.com.gestaocercria.api.entidade.EstoqueMedicamento;
 @Repository
 public interface RepositorioEstoqueMedicamento extends CrudRepository<EstoqueMedicamento, Integer> {
     List<EstoqueMedicamento> findByMedicamentoId(Integer medicamentoId);
+
+    EstoqueMedicamento findTopByMedicamentoIdOrderByDataEntradaDesc (Integer id);
 }

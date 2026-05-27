@@ -27,7 +27,28 @@ public class ControleEstoqueMedicamento {
 
     @PostMapping("/cadastro")
     public EstoqueMedicamento cadastrar(@RequestBody EstoqueMedicamento e) {
-        return acao.save(e);
+        List<EstoqueMedicamento> entradas =
+                acao.findByMedicamentoId(
+                        e.getMedicamento().getId()
+                );
+
+        int estoqueAtual =
+                entradas.stream()
+                        .mapToInt(
+                            item ->
+                                item.getQuantidade_atual()
+                        )
+                        .sum();
+
+        e.setQuantidade_atual(
+                estoqueAtual
+                +
+                e.getQuantidade()
+        );
+
+        return acao.save(
+                e
+        );
     }
 
     @GetMapping("/listagem")
