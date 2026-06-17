@@ -1,29 +1,25 @@
 package br.com.gestaocercria.api.controle;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.gestaocercria.api.entidade.Acolhido;
 import br.com.gestaocercria.api.repositorio.RepositorioAcolhido;
 
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/acolhido")
 @CrossOrigin(origins = "http://localhost:4200")
 public class ControleAcolhido {
-    @Autowired
-    private RepositorioAcolhido acao;
+    private final RepositorioAcolhido acao;
+
+    ControleAcolhido(RepositorioAcolhido acao) {
+        this.acao = acao;
+    }
 
     @PostMapping("/cadastro")
-    public Acolhido cadastrar(@RequestBody Acolhido a) {
+    public Acolhido cadastrar(@RequestBody @NonNull Acolhido a) {
         return acao.save(a);
     }
 
@@ -33,17 +29,17 @@ public class ControleAcolhido {
     }
 
     @GetMapping("/{id}")            
-    public Acolhido buscarPorId(@PathVariable Integer id) {
+    public Acolhido buscarPorId(@PathVariable @NonNull Integer id) {
         return acao.findById(id).orElse(null);
     }
 
     @PutMapping("/edicao")
-    public Acolhido editar(@RequestBody Acolhido a) {
+    public Acolhido editar(@RequestBody @NonNull Acolhido a) {
         return acao.save(a);
     }
 
     @DeleteMapping("/{id}")
-    public void remover(@PathVariable Integer id) {
+    public void remover(@PathVariable @NonNull Integer id) {
         acao.deleteById(id);
     }
 }

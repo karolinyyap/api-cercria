@@ -15,7 +15,7 @@ public class AgendaMedicamento {
     private Integer id;
     private String data;
     private String horario;
-    private Integer dose;
+    private Double dose;
     private String motivo;
     private String status;
     private String motivoNaoTomou;

@@ -2,19 +2,13 @@ package br.com.gestaocercria.api.controle;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.gestaocercria.api.entidade.EstoqueMedicamento;
 import br.com.gestaocercria.api.repositorio.RepositorioEstoqueMedicamento;
 
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
@@ -22,33 +16,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @CrossOrigin(origins = "http://localhost:4200")
 public class ControleEstoqueMedicamento {
 
-    @Autowired
-    private RepositorioEstoqueMedicamento acao;
+    private final RepositorioEstoqueMedicamento acao;
+
+    ControleEstoqueMedicamento(RepositorioEstoqueMedicamento acao) {
+        this.acao = acao;
+    }
 
     @PostMapping("/cadastro")
     public EstoqueMedicamento cadastrar(@RequestBody EstoqueMedicamento e) {
-        List<EstoqueMedicamento> entradas =
-                acao.findByMedicamentoId(
-                        e.getMedicamento().getId()
-                );
+        List<EstoqueMedicamento> entradas = acao.findByMedicamentoId(e.getMedicamento().getId());
 
-        int estoqueAtual =
-                entradas.stream()
-                        .mapToInt(
-                            item ->
-                                item.getQuantidade_atual()
-                        )
-                        .sum();
+        Double estoqueAtual = entradas.stream().mapToDouble(item -> item.getQuantidade_atual()).sum();
 
-        e.setQuantidade_atual(
-                estoqueAtual
-                +
-                e.getQuantidade()
-        );
+        e.setQuantidade_atual(estoqueAtual + e.getQuantidade());
 
-        return acao.save(
-                e
-        );
+        return acao.save(e);
     }
 
     @GetMapping("/listagem")
@@ -57,7 +39,7 @@ public class ControleEstoqueMedicamento {
     }
 
     @GetMapping("/{id}")
-    public EstoqueMedicamento buscarPorId(@PathVariable Integer id) {
+    public EstoqueMedicamento buscarPorId(@PathVariable @NonNull Integer id) {
         return acao.findById(id).orElse(null);
     }
 
@@ -67,7 +49,8 @@ public class ControleEstoqueMedicamento {
     }
 
     @PutMapping("/edicao")
-    public EstoqueMedicamento editar(@RequestBody EstoqueMedicamento e) {
+    public EstoqueMedicamento editar(@RequestBody @NonNull EstoqueMedicamento e) {
         return acao.save(e);
     }
+
 }

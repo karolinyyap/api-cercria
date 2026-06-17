@@ -1,30 +1,28 @@
 package br.com.gestaocercria.api.controle;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.lang.NonNull;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.gestaocercria.api.entidade.Funcionario;
 import br.com.gestaocercria.api.repositorio.RepositorioFuncionario;
 
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/funcionario")
 @CrossOrigin(origins = "http://localhost:4200")
 public class ControleFuncionario {
-    @Autowired
-    private RepositorioFuncionario acao;
+    private final RepositorioFuncionario acao;
 
-    @Autowired
-    private BCryptPasswordEncoder encoder;
+    private final BCryptPasswordEncoder encoder;
+
+    ControleFuncionario(RepositorioFuncionario acao, BCryptPasswordEncoder encoder) {
+        this.acao = acao;
+        this.encoder = encoder;
+    }
 
     @PostMapping("/cadastro")
     public Funcionario cadastrar(@RequestBody Funcionario f) {
@@ -39,41 +37,62 @@ public class ControleFuncionario {
     }
 
     @GetMapping("/{id}")            
-    public Funcionario buscarPorId(@PathVariable Integer id) {
+    public Funcionario buscarPorId(@PathVariable @NonNull Integer id) {
         return acao.findById(id).orElse(null);
     }
 
     @PutMapping("/edicao")
     public Funcionario editar(@RequestBody Funcionario f) {
-        String senhaHash = encoder.encode(f.getSenha());
-        f.setSenha(senhaHash);
+
+        Funcionario existente = acao.findById(f.getId()).orElse(null);
+
+        if (existente == null) {
+            return null;
+        }
+
+        f.setSenha(existente.getSenha());
+
         return acao.save(f);
     }
 
     @DeleteMapping("/{id}")
-    public void remover(@PathVariable Integer id) {
+    public void remover(@PathVariable @NonNull Integer id) {
         acao.deleteById(id);
     }
 
     @PostMapping("/login")
-    public Funcionario login(@RequestBody Funcionario f) {
+    public ResponseEntity<?> login(@RequestBody Funcionario f) {
+
         Funcionario usuario = acao.findByEmail(f.getEmail());
 
-        if (usuario != null && encoder.matches(f.getSenha(), usuario.getSenha())) {
-            usuario.setSenha(null); 
-            return usuario;
+        if (usuario == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Usuário não encontrado");
         }
 
-        return null;
+        boolean senhaCorreta = encoder.matches(f.getSenha(),usuario.getSenha());
+
+        if (!senhaCorreta) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Senha inválida");
+        }
+
+        usuario.setSenha(null);
+
+        return ResponseEntity.ok(usuario);
     }
 
-    public boolean login(String email, String senhaDigitada) {
-        Funcionario usuario = acao.findByEmail(email);
+    @PutMapping("/alterar-senha")
+    public Funcionario alterarSenha(@RequestBody Funcionario f) {
+
+        Funcionario usuario = acao.findById(f.getId()).orElse(null);
 
         if (usuario == null) {
-            return false;
+            return null;
         }
 
-        return encoder.matches(senhaDigitada, usuario.getSenha());
+        String senhaHash = encoder.encode(f.getSenha());
+
+        usuario.setSenha(senhaHash);
+
+        return acao.save(usuario);
     }
 }

@@ -13,7 +13,7 @@ public class ControleUsoMedicamento {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Integer dose;
+    private Double dose;
     private Integer intervalo;
     private String iniciandoEm;
     private Integer vezesAoDia;

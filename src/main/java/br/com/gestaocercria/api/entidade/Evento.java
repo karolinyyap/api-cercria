@@ -1,14 +1,10 @@
 package br.com.gestaocercria.api.entidade;
 
-import java.sql.Date;
 import java.time.LocalTime;
 import java.util.List;
+import java.time.LocalDate;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -22,7 +18,7 @@ public class Evento {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String nome;
-    private Date data;
+    private LocalDate data;
     private LocalTime hora;
     private String descricao;
 

@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
 
 import br.com.gestaocercria.api.entidade.AgendaMedicamento;
@@ -17,22 +17,19 @@ import br.com.gestaocercria.api.repositorio.RepositorioControleMedicamento;
 @CrossOrigin(origins = "http://localhost:4200")
 public class ControleControlarUsoMedicamento {
 
-    @Autowired
-    private RepositorioControleMedicamento acao;
+    private final RepositorioControleMedicamento acao;
 
-    @Autowired
-    private RepositorioAgendaMedicamento agendaRepo;
+    private final RepositorioAgendaMedicamento agendaRepo;
+
+    ControleControlarUsoMedicamento(RepositorioControleMedicamento acao, RepositorioAgendaMedicamento agendaRepo) {
+        this.acao = acao;
+        this.agendaRepo = agendaRepo;
+    }
 
     @PostMapping("/cadastro")
-    public ControleUsoMedicamento cadastrar(
-            @RequestBody ControleUsoMedicamento controle
-    ) {
-
-        ControleUsoMedicamento salvo =
-                acao.save(controle);
-
+    public ControleUsoMedicamento cadastrar(@RequestBody @NonNull ControleUsoMedicamento controle) {
+        ControleUsoMedicamento salvo = acao.save(controle);
         gerarAgenda(salvo);
-
         return salvo;
     }
 
@@ -43,21 +40,21 @@ public class ControleControlarUsoMedicamento {
 
     @GetMapping("/{id}")
     public ControleUsoMedicamento buscarPorId(
-            @PathVariable Integer id
+            @PathVariable @NonNull Integer id
     ) {
         return acao.findById(id).orElse(null);
     }
 
     @PutMapping("/edicao")
     public ControleUsoMedicamento editar(
-            @RequestBody ControleUsoMedicamento controle
+            @RequestBody @NonNull ControleUsoMedicamento controle
     ) {
         return acao.save(controle);
     }
 
     @DeleteMapping("/{id}")
     public void remover(
-            @PathVariable Integer id
+            @PathVariable @NonNull Integer id
     ) {
         acao.deleteById(id);
     }

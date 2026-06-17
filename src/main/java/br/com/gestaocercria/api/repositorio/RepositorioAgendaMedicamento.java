@@ -8,8 +8,7 @@ import org.springframework.stereotype.Repository;
 import br.com.gestaocercria.api.entidade.AgendaMedicamento;
 
 @Repository
-public interface RepositorioAgendaMedicamento
-extends CrudRepository<AgendaMedicamento, Long> {
+public interface RepositorioAgendaMedicamento extends CrudRepository<AgendaMedicamento, Long> {
 
     List<AgendaMedicamento> findByAcolhidoId(Integer id);
 

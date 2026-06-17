@@ -3,27 +3,26 @@ package br.com.gestaocercria.api.controle;
 import java.time.LocalDate;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
 
-import br.com.gestaocercria.api.entidade.AgendaMedicamento;
-import br.com.gestaocercria.api.entidade.EstoqueMedicamento;
-import br.com.gestaocercria.api.repositorio.RepositorioAgendaMedicamento;
-import br.com.gestaocercria.api.repositorio.RepositorioEstoqueMedicamento;
+import br.com.gestaocercria.api.entidade.*;
+import br.com.gestaocercria.api.repositorio.*;
 
 @RestController
 @RequestMapping("/controle-medicamento/agenda")
 @CrossOrigin(origins = "http://localhost:4200")
 public class ControleAgendaMedicamento {
 
-        @Autowired
-        private RepositorioEstoqueMedicamento estoqueRepo;
+        private final RepositorioEstoqueMedicamento estoqueRepo;
+        private final RepositorioAgendaMedicamento agendaRepo;
+        private final RepositorioAgendaMedicamento acao;
 
-        @Autowired
-        private RepositorioAgendaMedicamento agendaRepo;
-
-        @Autowired
-        private RepositorioAgendaMedicamento acao;
+        ControleAgendaMedicamento(RepositorioEstoqueMedicamento estoqueRepo, RepositorioAgendaMedicamento agendaRepo, RepositorioAgendaMedicamento acao) {
+                this.estoqueRepo = estoqueRepo;
+                this.agendaRepo = agendaRepo;
+                this.acao = acao;
+        }
 
         @GetMapping("/listagem")
         public Iterable<AgendaMedicamento> selecionar() {
@@ -31,7 +30,7 @@ public class ControleAgendaMedicamento {
         }
 
         @GetMapping("/{id}")
-        public AgendaMedicamento buscarPorId(@PathVariable Long id) {
+        public AgendaMedicamento buscarPorId(@PathVariable @NonNull Long id) {
                 return acao.findById(id).orElse(null);
         }
 
@@ -41,7 +40,7 @@ public class ControleAgendaMedicamento {
         }
 
         @PutMapping("/tomou/{id}")
-        public AgendaMedicamento confirmarDose(@PathVariable Long id) {
+        public AgendaMedicamento confirmarDose(@PathVariable @NonNull Long id) {
 
                 AgendaMedicamento agenda =agendaRepo.findById(id).orElse(null);
 
@@ -70,11 +69,12 @@ public class ControleAgendaMedicamento {
                 agenda.setDataBaixa(LocalDate.now().toString());
 
                 return agendaRepo.save(agenda);
+                
         }
 
 
         @PutMapping("/nao-tomou/{id}")
-        public AgendaMedicamento naoTomou(@PathVariable Long id,@RequestBody String motivo) {
+        public AgendaMedicamento naoTomou(@PathVariable @NonNull Long id,@RequestBody String motivo) {
                 AgendaMedicamento agenda = agendaRepo.findById(id).orElse(null);
 
                 if (agenda == null) {
@@ -91,33 +91,29 @@ public class ControleAgendaMedicamento {
         @PostMapping("/esporadico")
         public AgendaMedicamento salvarEsporadico(@RequestBody AgendaMedicamento agenda) {
 
-                EstoqueMedicamento estoque = estoqueRepo.findTopByMedicamentoIdOrderByDataEntradaDesc(
-                        agenda.getMedicamento().getId()
-                );
+                EstoqueMedicamento estoque = estoqueRepo.findTopByMedicamentoIdOrderByDataEntradaDesc(agenda.getMedicamento().getId());
 
                 if (estoque == null) {
-                        throw new RuntimeException(
-                        "Medicamento sem estoque"
-                        );
+                        throw new RuntimeException("Medicamento sem estoque");
                 }
 
                 if (estoque.getQuantidade_atual() < agenda.getDose()) {
-                        throw new RuntimeException(
-                        "Estoque insuficiente"
-                        );
+                        throw new RuntimeException("Estoque insuficiente");
                 }
 
                 estoque.setQuantidade_atual(estoque.getQuantidade_atual() - agenda.getDose());
 
                 estoqueRepo.save(estoque);
-
                 agenda.setEstoqueMedicamento(estoque);
-
                 agenda.setStatus("DADO");
-
                 agenda.setDataBaixa(LocalDate.now().toString());
 
                 return agendaRepo.save(agenda);
         }
         
+        @GetMapping("/estoque-baixo")
+        public List<EstoqueMedicamento> estoqueBaixo() {
+                List<EstoqueMedicamento> estoques = (List<EstoqueMedicamento>) estoqueRepo.findAll();
+                return estoques.stream().filter(e -> e.getQuantidade_atual() <= 10).toList();
+        }
 }
