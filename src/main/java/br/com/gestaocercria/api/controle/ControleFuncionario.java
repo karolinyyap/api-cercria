@@ -90,7 +90,6 @@ public class ControleFuncionario {
         }
 
         String senhaHash = encoder.encode(f.getSenha());
-
         usuario.setSenha(senhaHash);
 
         return acao.save(usuario);
