@@ -17,11 +17,13 @@ public class ControleAlerta {
     private final RepositorioEvento eventoRepo;
     private final RepositorioEstoqueMedicamento estoqueRepo;
     private final RepositorioAgendaMedicamento agendaRepo;
+    private final RepositorioEntradaProduto estoqueProdutoRepo;
 
-    public ControleAlerta(RepositorioEvento eventoRepo, RepositorioEstoqueMedicamento estoqueRepo, RepositorioAgendaMedicamento agendaRepo) {
+    public ControleAlerta(RepositorioEvento eventoRepo, RepositorioEstoqueMedicamento estoqueRepo, RepositorioAgendaMedicamento agendaRepo, RepositorioEntradaProduto estoqueProdutoRepo) {
         this.eventoRepo = eventoRepo;
         this.estoqueRepo = estoqueRepo;
         this.agendaRepo = agendaRepo;
+        this.estoqueProdutoRepo = estoqueProdutoRepo;
     }
 
     @GetMapping("/listagem")
@@ -71,6 +73,38 @@ public class ControleAlerta {
                     + a.getMedicamento().getNome() + " às " + a.getHorario().substring(0, 5));
 
                 alertas.add(alerta);
+            });
+        
+        estoques.stream().filter(e -> e.getDataValidade() != null && !e.getDataValidade().isBlank())
+            .forEach(e -> {
+                LocalDate validade = LocalDate.parse(e.getDataValidade());
+
+                if (!validade.isBefore(hoje) && !validade.isAfter(hoje.plusDays(30))) {
+
+                    Map<String, String> alerta = new HashMap<>();
+                    alerta.put("tipo", "Validade");
+
+                    alerta.put( "mensagem", "O medicamento " + e.getMedicamento().getNome()
+                        + " vence em " + validade.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+
+                    alertas.add(alerta);
+                }
+            });
+
+        List<EntradaProduto> produtos = (List<EntradaProduto>) estoqueProdutoRepo.findAll();
+
+        produtos.stream().filter(p -> p.getDataValidade() != null && !p.getDataValidade().isBlank())
+            .forEach(p -> {
+                LocalDate validade = LocalDate.parse(p.getDataValidade());
+
+                if (!validade.isBefore(hoje) && !validade.isAfter(hoje.plusDays(30))) {
+                    Map<String, String> alerta = new HashMap<>();
+                    alerta.put("tipo", "Validade");
+                    alerta.put("mensagem", "O produto " + p.getProduto().getNome()
+                        + " vence em " + validade.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+
+                    alertas.add(alerta);
+                }
             });
 
         return alertas;

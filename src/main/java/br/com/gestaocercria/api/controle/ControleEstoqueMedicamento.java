@@ -3,7 +3,6 @@ package br.com.gestaocercria.api.controle;
 import java.util.List;
 
 import org.springframework.lang.NonNull;
-import org.springframework.web.bind.annotation.RestController;
 
 import br.com.gestaocercria.api.entidade.EstoqueMedicamento;
 import br.com.gestaocercria.api.repositorio.RepositorioEstoqueMedicamento;
@@ -26,7 +25,12 @@ public class ControleEstoqueMedicamento {
     public EstoqueMedicamento cadastrar(@RequestBody EstoqueMedicamento e) {
         List<EstoqueMedicamento> entradas = acao.findByMedicamentoId(e.getMedicamento().getId());
 
-        Double estoqueAtual = entradas.stream().mapToDouble(item -> item.getQuantidade_atual()).sum();
+        Double estoqueAtual = 0.0;
+
+        if (!entradas.isEmpty()) {
+            EstoqueMedicamento ultima = entradas.get(entradas.size() - 1);
+            estoqueAtual = ultima.getQuantidade_atual();
+        }
 
         e.setQuantidade_atual(estoqueAtual + e.getQuantidade());
 
