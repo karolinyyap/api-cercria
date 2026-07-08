@@ -16,6 +16,7 @@ public class EntradaProduto {
     private String dataValidade;
     private String origem;
     private String observacao;
+    private Double quantidadeAtual;
 
     @ManyToOne
     private Produto produto;

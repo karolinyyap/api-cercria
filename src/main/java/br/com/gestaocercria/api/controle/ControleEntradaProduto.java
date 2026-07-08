@@ -1,9 +1,10 @@
 package br.com.gestaocercria.api.controle;
 
+import java.util.List;
 import org.springframework.web.bind.annotation.*;
-
 import br.com.gestaocercria.api.entidade.EntradaProduto;
 import br.com.gestaocercria.api.repositorio.RepositorioEntradaProduto;
+
 import lombok.NonNull;
 
 @RestController
@@ -19,6 +20,7 @@ public class ControleEntradaProduto {
 
     @PostMapping("/cadastro")
     public EntradaProduto cadastrar(@RequestBody @NonNull EntradaProduto p) {
+        p.setQuantidadeAtual(p.getQuantidade());
         return acao.save(p);
     }
 
@@ -26,4 +28,10 @@ public class ControleEntradaProduto {
     public Iterable<EntradaProduto> selecionar() {
         return acao.findAll();
     }
+
+    @GetMapping("/produto/{id}")
+    public List<EntradaProduto> listarPorProduto(@PathVariable Integer id) {
+        return acao.findByProdutoId(id);
+    }
+    
 }
