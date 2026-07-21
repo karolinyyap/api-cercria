@@ -7,7 +7,6 @@ import br.com.gestaocercria.api.repositorio.RepositorioPatrimonio;
 
 @RestController
 @RequestMapping("/patrimonio")
-@CrossOrigin(origins = "http://localhost:4200")
 public class ControlePatrimonio {
     private final RepositorioPatrimonio acao;
 

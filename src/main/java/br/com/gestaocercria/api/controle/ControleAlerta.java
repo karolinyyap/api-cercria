@@ -11,7 +11,6 @@ import br.com.gestaocercria.api.repositorio.*;
 
 @RestController
 @RequestMapping("/alerta")
-@CrossOrigin(origins = "http://localhost:4200")
 public class ControleAlerta {
 
     private final RepositorioEvento eventoRepo;

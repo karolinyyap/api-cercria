@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/produto")
-@CrossOrigin(origins = "http://localhost:4200")
 public class ControleProduto {
     private final RepositorioProduto acao;
 

@@ -12,7 +12,6 @@ import lombok.NonNull;
 
 @RestController
 @RequestMapping("/controle-produto/saida")
-@CrossOrigin(origins = "http://localhost:4200")
 public class ControleSaidaProduto {
     private final RepositorioSaidaProduto acao;
     private final RepositorioEntradaProduto entradaRepo;

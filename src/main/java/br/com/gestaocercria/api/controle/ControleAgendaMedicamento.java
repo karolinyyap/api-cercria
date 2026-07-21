@@ -11,7 +11,6 @@ import br.com.gestaocercria.api.repositorio.*;
 
 @RestController
 @RequestMapping("/controle-medicamento/agenda")
-@CrossOrigin(origins = "http://localhost:4200")
 public class ControleAgendaMedicamento {
 
         private final RepositorioEstoqueMedicamento estoqueRepo;

@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/entrada-medicamento")
-@CrossOrigin(origins = "http://localhost:4200")
 public class ControleEstoqueMedicamento {
 
     private final RepositorioEstoqueMedicamento acao;
