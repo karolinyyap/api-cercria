@@ -15,8 +15,11 @@ public class CorsConfig {
             @Override
             public void addCorsMappings(@NonNull CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("http://localhost:4200", "https://cercria-six.vercel.app")
-                        .allowedMethods("*")
+                        .allowedOrigins(
+                            "http://localhost:4200", 
+                            "https://cercria-six.vercel.app" 
+                        )
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*");
             }
         };

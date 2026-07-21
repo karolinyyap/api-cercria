@@ -8,7 +8,7 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class KeepAliveService {
 
-    @Value("${PING_URL:http://localhost:8080/ping}")
+    @Value("${PING_URL:https://api-cercria.onrender.com/ping}")
     private String pingUrl;
 
     // Executa a cada 14 minutos (840000 ms)
