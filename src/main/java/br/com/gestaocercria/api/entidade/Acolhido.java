@@ -33,6 +33,7 @@ public class Acolhido {
     private Integer tamanhoCalcado;
     private String tamanhoRoupaIntima;
     List<Long> medicamentos;
+    private Boolean excluido = false;
     
     public boolean isAtivo() {
         return this.dataSaida == null;

@@ -27,7 +27,7 @@ public class ControleEvento {
 
     @GetMapping("/listagem")
     public Iterable<Evento> selecionar() {
-        return acao.findAll();
+        return acao.findByExcluidoFalse();
     }
 
     @GetMapping("/{id}")            
@@ -40,9 +40,15 @@ public class ControleEvento {
         return acao.save(e);
     }
 
-    @DeleteMapping("/{id}")
-    public void remover(@PathVariable @NonNull Integer id) {
-        acao.deleteById(id);
+    @PutMapping("/excluir/{id}")
+    public Evento excluir(@PathVariable Integer id) {
+
+        Evento evento = acao.findById(id)
+            .orElseThrow(() -> new RuntimeException("Evento não encontrado"));
+
+        evento.setExcluido(true);
+
+        return acao.save(evento);
     }
 
     @GetMapping("/proximos")

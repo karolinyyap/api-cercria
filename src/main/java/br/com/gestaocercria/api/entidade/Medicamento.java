@@ -16,4 +16,5 @@ public class Medicamento {
     private String nome;
     private String categoria;
     private String unidadeMedida;
+    private Boolean excluido = false;
 }

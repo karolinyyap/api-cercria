@@ -10,4 +10,6 @@ public interface RepositorioEvento extends CrudRepository<Evento, Integer>  {
     @Override
     @NonNull
     List<Evento> findAll();
+    List<Evento> findByExcluidoFalse();
+
 }

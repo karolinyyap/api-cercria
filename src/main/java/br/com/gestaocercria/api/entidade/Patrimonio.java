@@ -18,4 +18,5 @@ public class Patrimonio {
     private Long tombamento;
     private String especificacao;
     private Date dtAquisicao;
+    private Boolean excluido = false;
 }

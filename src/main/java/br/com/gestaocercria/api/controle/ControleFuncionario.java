@@ -4,7 +4,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.bind.annotation.RestController;
 
 import br.com.gestaocercria.api.entidade.Funcionario;
 import br.com.gestaocercria.api.repositorio.RepositorioFuncionario;
@@ -32,7 +31,7 @@ public class ControleFuncionario {
 
     @GetMapping("/listagem")
     public Iterable<Funcionario> selecionar() {
-        return acao.findAll();
+        return acao.findByExcluidoFalse();
     }
 
     @GetMapping("/{id}")            
@@ -54,9 +53,15 @@ public class ControleFuncionario {
         return acao.save(f);
     }
 
-    @DeleteMapping("/{id}")
-    public void remover(@PathVariable @NonNull Integer id) {
-        acao.deleteById(id);
+    @PutMapping("/excluir/{id}")
+    public Funcionario excluir(@PathVariable Integer id) {
+
+        Funcionario func = acao.findById(id)
+            .orElseThrow(() -> new RuntimeException("Funcionario não encontrado"));
+
+        func.setExcluido(true);
+
+        return acao.save(func);
     }
 
     @PostMapping("/login")

@@ -1,7 +1,6 @@
 package br.com.gestaocercria.api.controle;
 
 import org.springframework.lang.NonNull;
-import org.springframework.web.bind.annotation.RestController;
 
 import br.com.gestaocercria.api.entidade.Medicamento;
 import br.com.gestaocercria.api.repositorio.RepositorioMedicamento;
@@ -24,7 +23,7 @@ public class ControleMedicamento {
 
     @GetMapping("/listagem")
     public Iterable<Medicamento> selecionar() {
-        return acao.findAll();
+        return acao.findByExcluidoFalse();
     }
 
     @GetMapping("/{id}")            
@@ -37,8 +36,14 @@ public class ControleMedicamento {
         return acao.save(m);
     }
 
-    @DeleteMapping("/{id}")
-    public void remover(@PathVariable @NonNull Integer id) {
-        acao.deleteById(id);
+    @PutMapping("/excluir/{id}")
+    public Medicamento excluir(@PathVariable Integer id) {
+
+        Medicamento med = acao.findById(id)
+            .orElseThrow(() -> new RuntimeException("Medicamento não encontrado"));
+
+        med.setExcluido(true);
+
+        return acao.save(med);
     }
 }

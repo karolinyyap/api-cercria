@@ -21,7 +21,7 @@ public class ControlePatrimonio {
 
     @GetMapping("/listagem")
     public Iterable<Patrimonio> selecionar() {
-        return acao.findAll();
+        return acao.findByExcluidoFalse();
     }
 
     @GetMapping("/{id}")            
@@ -34,8 +34,14 @@ public class ControlePatrimonio {
         return acao.save(p);
     }
 
-    @DeleteMapping("/{id}")
-    public void remover(@PathVariable @NonNull Integer id) {
-        acao.deleteById(id);
+    @PutMapping("/excluir/{id}")
+    public Patrimonio excluir(@PathVariable Integer id) {
+
+        Patrimonio pat = acao.findById(id)
+            .orElseThrow(() -> new RuntimeException("Patrimonio não encontrado"));
+
+        pat.setExcluido(true);
+
+        return acao.save(pat);
     }
 }

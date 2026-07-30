@@ -16,6 +16,6 @@ public class Produto {
     private String nome;
     private String categoria;
     private String unidadeMedida;
-    private String rendimento;
+    private Boolean excluido = false;
 }
 
