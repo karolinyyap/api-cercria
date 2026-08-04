@@ -1,5 +1,7 @@
 package br.com.gestaocercria.api.controle;
 
+import java.util.Map;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
@@ -7,6 +9,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import br.com.gestaocercria.api.entidade.Funcionario;
 import br.com.gestaocercria.api.repositorio.RepositorioFuncionario;
+import br.com.gestaocercria.api.securityConfig.JwtService;
 
 import org.springframework.web.bind.annotation.*;
 
@@ -16,10 +19,12 @@ public class ControleFuncionario {
     private final RepositorioFuncionario acao;
 
     private final BCryptPasswordEncoder encoder;
+    private final JwtService jwtService;
 
-    ControleFuncionario(RepositorioFuncionario acao, BCryptPasswordEncoder encoder) {
+    ControleFuncionario(RepositorioFuncionario acao, BCryptPasswordEncoder encoder, JwtService jwtService) {
         this.acao = acao;
         this.encoder = encoder;
+        this.jwtService = jwtService;
     }
 
     @PostMapping("/cadastro")
@@ -79,9 +84,10 @@ public class ControleFuncionario {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Senha inválida");
         }
 
+        String token = jwtService.gerarToken(usuario.getEmail());
         usuario.setSenha(null);
 
-        return ResponseEntity.ok(usuario);
+        return ResponseEntity.ok(Map.of("token", token, "funcionario", usuario));
     }
 
     @PutMapping("/alterar-senha")
