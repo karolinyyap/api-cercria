@@ -61,4 +61,9 @@ public class ControleSaidaProduto {
     public Iterable<SaidaProduto> selecionar() {
         return acao.findAll();
     }
+
+    @GetMapping("/produto/{id}")
+    public List<SaidaProduto> listarPorProduto(@PathVariable Integer id) {
+        return acao.findByProdutoId(id);
+    }
 }
