@@ -35,7 +35,6 @@ public class Funcionario {
     private Date dataSaida;
     private String senha;
     private Boolean excluido = false;
-    private Boolean senhaTemporaria = false;
 
     public boolean isAtivo() {
         return this.dataSaida == null;

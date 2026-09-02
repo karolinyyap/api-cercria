@@ -21,17 +21,39 @@ public class JwtService {
     }
 
     public String gerarToken(String email) {
-        return Jwts.builder().subject(email).issuedAt(new Date())
-            .expiration(new Date(System.currentTimeMillis())).signWith(getKey()).compact();
+
+        Date agora = new Date();
+
+        // Token válido por 1 hora
+        Date expiracao = new Date(
+            System.currentTimeMillis() + 1000 * 60 * 60
+        );
+
+        return Jwts.builder()
+                .subject(email)
+                .issuedAt(agora)
+                .expiration(expiracao)
+                .signWith(getKey())
+                .compact();
     }
 
     public String extrairEmail(String token) {
-        return Jwts.parser().verifyWith(getKey()).build().parseSignedClaims(token).getPayload().getSubject();
+        return Jwts.parser()
+                .verifyWith(getKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .getSubject();
     }
 
     public boolean tokenValido(String token) {
+
         try {
-            Jwts.parser().verifyWith(getKey()).build().parseSignedClaims(token);
+            Jwts.parser()
+                    .verifyWith(getKey())
+                    .build()
+                    .parseSignedClaims(token);
+
             return true;
 
         } catch (Exception e) {
