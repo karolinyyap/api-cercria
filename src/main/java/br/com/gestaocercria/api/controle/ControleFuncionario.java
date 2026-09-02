@@ -135,4 +135,30 @@ public class ControleFuncionario {
 
         return acao.save(usuario);
     }
+
+    @PostMapping("/recuperar-senha")
+    public ResponseEntity<?> recuperarSenha(@RequestBody Map<String, String> dados) {
+
+        String email = dados.get("email");
+
+        if (email == null || email.isBlank()) {
+            return ResponseEntity.badRequest().body("E-mail não informado");
+        }
+
+        Funcionario funcionario = acao.findByEmail(email);
+
+        if (funcionario == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("E-mail não encontrado");
+        }
+
+        // Gera uma senha temporária de 6 números
+        String senhaTemporaria = String.format("%06d", new java.util.Random().nextInt(100000000));
+
+        // Salva a senha criptografada
+        funcionario.setSenha(encoder.encode(senhaTemporaria));
+
+        acao.save(funcionario);
+
+        return ResponseEntity.ok(Map.of("mensagem", "Senha temporária gerada com sucesso","senhaTemporaria", senhaTemporaria));
+    }
 }
