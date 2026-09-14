@@ -1566,13 +1566,21 @@ public class ControleRelatorio {
 
         StringBuilder xml = new StringBuilder();
 
+        /*
+        * ============================================================
+        * INÍCIO DO RELATÓRIO
+        * ============================================================
+        *
+        * Não colocamos <?xml ... ?> aqui.
+        * O Jasper consegue interpretar o JRXML sem essa declaração.
+        */
         xml.append("""
             <jasperReport
                 xmlns="http://jasperreports.sourceforge.net/jasperreports"
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                 xsi:schemaLocation="
-                http://jasperreports.sourceforge.net/jasperreports
-                http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+                    http://jasperreports.sourceforge.net/jasperreports
+                    http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
                 name="relatorioDinamico"
                 pageWidth="842"
                 pageHeight="595"
@@ -1586,21 +1594,11 @@ public class ControleRelatorio {
         """);
 
         /*
-        * Campos do Jasper
-        */
-        for (String campo : campos) {
-
-            xml.append("""
-                <field
-                    name="%s"
-                    class="java.lang.Object"/>
-            """.formatted(
-                    escaparXml(campo)
-            ));
-        }
-
-        /*
-        * Parâmetros
+        * ============================================================
+        * PARÂMETROS
+        * ============================================================
+        *
+        * Os parâmetros precisam aparecer antes dos fields.
         */
         xml.append("""
             <parameter
@@ -1611,7 +1609,33 @@ public class ControleRelatorio {
                 name="TOTAL"
                 class="java.lang.Integer"/>
 
+        """);
+
+        /*
+        * ============================================================
+        * CAMPOS
+        * ============================================================
+        */
+        for (String campo : campos) {
+
+            xml.append("""
+                <field
+                    name="%s"
+                    class="java.lang.Object"/>
+
+            """.formatted(
+                    escaparXml(campo)
+            ));
+        }
+
+        /*
+        * ============================================================
+        * TÍTULO
+        * ============================================================
+        */
+        xml.append("""
             <title>
+
                 <band height="65">
 
                     <textField>
@@ -1641,7 +1665,8 @@ public class ControleRelatorio {
                             height="20"/>
 
                         <textElement
-                            textAlignment="Center"/>
+                            textAlignment="Center"
+                            verticalAlignment="Middle"/>
 
                         <textFieldExpression>
                             <![CDATA["Total de registros: " + $P{TOTAL}]]>
@@ -1650,17 +1675,22 @@ public class ControleRelatorio {
                     </textField>
 
                 </band>
+
             </title>
 
+        """);
+
+        /*
+        * ============================================================
+        * CABEÇALHO DAS COLUNAS
+        * ============================================================
+        */
+        xml.append("""
             <columnHeader>
 
                 <band height="35">
 
         """);
-
-        /*
-        * Cabeçalho das colunas
-        */
 
         int x = 0;
 
@@ -1703,15 +1733,19 @@ public class ControleRelatorio {
 
             </columnHeader>
 
+        """);
+
+        /*
+        * ============================================================
+        * DETALHES / LINHAS DO RELATÓRIO
+        * ============================================================
+        */
+        xml.append("""
             <detail>
 
                 <band height="30">
 
         """);
-
-        /*
-        * Valores
-        */
 
         x = 0;
 
@@ -1755,6 +1789,14 @@ public class ControleRelatorio {
 
             </detail>
 
+        """);
+
+        /*
+        * ============================================================
+        * RODAPÉ
+        * ============================================================
+        */
+        xml.append("""
             <pageFooter>
 
                 <band height="25">
@@ -1768,7 +1810,8 @@ public class ControleRelatorio {
                             height="20"/>
 
                         <textElement
-                            textAlignment="Right"/>
+                            textAlignment="Right"
+                            verticalAlignment="Middle"/>
 
                         <textFieldExpression>
                             <![CDATA["Página " + $V{PAGE_NUMBER}]]>
@@ -1780,6 +1823,14 @@ public class ControleRelatorio {
 
             </pageFooter>
 
+        """);
+
+        /*
+        * ============================================================
+        * FIM DO RELATÓRIO
+        * ============================================================
+        */
+        xml.append("""
             </jasperReport>
         """);
 
