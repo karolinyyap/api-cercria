@@ -1534,20 +1534,17 @@ public class ControleRelatorio {
             String tipo,
             List<String> campos) {
 
-        int totalCampos =
-                campos.size();
+        int totalCampos = campos.size();
 
-        int larguraPagina =
-                555;
+        int larguraPagina = 802;
 
         int larguraCampo =
                 Math.max(
-                    50,
-                    larguraPagina / totalCampos
+                        50,
+                        larguraPagina / totalCampos
                 );
 
-        StringBuilder xml =
-                new StringBuilder();
+        StringBuilder xml = new StringBuilder();
 
         xml.append("""
             <?xml version="1.0" encoding="UTF-8"?>
@@ -1571,8 +1568,8 @@ public class ControleRelatorio {
         """);
 
         /*
-         * Campos do Jasper
-         */
+        * Campos do Jasper
+        */
         for (String campo : campos) {
 
             xml.append("""
@@ -1580,14 +1577,13 @@ public class ControleRelatorio {
                     name="%s"
                     class="java.lang.Object"/>
             """.formatted(
-                escaparXml(campo)
+                    escaparXml(campo)
             ));
         }
 
-
         /*
-         * Parâmetros
-         */
+        * Parâmetros
+        */
         xml.append("""
             <parameter
                 name="TITULO"
@@ -1610,13 +1606,7 @@ public class ControleRelatorio {
 
                         <textElement
                             textAlignment="Center"
-                            verticalAlignment="Middle">
-
-                            <font
-                                size="18"
-                                isBold="true"/>
-
-                        </textElement>
+                            verticalAlignment="Middle"/>
 
                         <textFieldExpression>
                             <![CDATA[$P{TITULO}]]>
@@ -1633,11 +1623,7 @@ public class ControleRelatorio {
                             height="20"/>
 
                         <textElement
-                            textAlignment="Center">
-
-                            <font size="10"/>
-
-                        </textElement>
+                            textAlignment="Center"/>
 
                         <textFieldExpression>
                             <![CDATA["Total de registros: " + $P{TOTAL}]]>
@@ -1654,10 +1640,9 @@ public class ControleRelatorio {
 
         """);
 
-
         /*
-         * Cabeçalho das colunas
-         */
+        * Cabeçalho das colunas
+        */
 
         int x = 0;
 
@@ -1678,13 +1663,7 @@ public class ControleRelatorio {
 
                     <textElement
                         textAlignment="Center"
-                        verticalAlignment="Middle">
-
-                        <font
-                            size="9"
-                            isBold="true"/>
-
-                    </textElement>
+                        verticalAlignment="Middle"/>
 
                     <text>
                         <![CDATA[%s]]>
@@ -1693,16 +1672,13 @@ public class ControleRelatorio {
                 </staticText>
 
             """.formatted(
-                x,
-                larguraCampo,
-                escaparXml(
-                    nomeCampo(campo)
-                )
+                    x,
+                    larguraCampo,
+                    escaparXml(nomeCampo(campo))
             ));
 
             x += larguraCampo;
         }
-
 
         xml.append("""
                 </band>
@@ -1715,10 +1691,9 @@ public class ControleRelatorio {
 
         """);
 
-
         /*
-         * Valores
-         */
+        * Valores
+        */
 
         x = 0;
 
@@ -1740,11 +1715,7 @@ public class ControleRelatorio {
 
                     <textElement
                         textAlignment="Center"
-                        verticalAlignment="Middle">
-
-                        <font size="8"/>
-
-                    </textElement>
+                        verticalAlignment="Middle"/>
 
                     <textFieldExpression>
                         <![CDATA[$F{%s}]]>
@@ -1753,14 +1724,13 @@ public class ControleRelatorio {
                 </textField>
 
             """.formatted(
-                x,
-                larguraCampo,
-                campo
+                    x,
+                    larguraCampo,
+                    escaparXml(campo)
             ));
 
             x += larguraCampo;
         }
-
 
         xml.append("""
                 </band>
@@ -1780,11 +1750,7 @@ public class ControleRelatorio {
                             height="20"/>
 
                         <textElement
-                            textAlignment="Right">
-
-                            <font size="8"/>
-
-                        </textElement>
+                            textAlignment="Right"/>
 
                         <textFieldExpression>
                             <![CDATA["Página " + $V{PAGE_NUMBER}]]>
