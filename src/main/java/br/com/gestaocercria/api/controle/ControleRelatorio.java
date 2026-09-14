@@ -884,7 +884,7 @@ public class ControleRelatorio {
         }
 
         sql.append(
-            " FROM " + config.tabela()
+            " FROM " + config.tabela() + " " + config.alias()
         );
 
         sql.append(" ");
@@ -1976,6 +1976,12 @@ public class ControleRelatorio {
 
             case "descricao" ->
                 "Descrição";
+
+            case "acolhidos" ->
+                "Acolhidos";
+
+            case "responsaveis" ->
+                "Responsáveis";
 
             default ->
                 campo;

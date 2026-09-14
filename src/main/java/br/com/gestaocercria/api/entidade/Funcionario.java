@@ -2,11 +2,7 @@ package br.com.gestaocercria.api.entidade;
 
 import java.util.Date;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -22,9 +18,16 @@ public class Funcionario {
     private String nome;
     private String telefone;
     private Date dataNascimento;
+
+    @Column(unique = true, nullable = false)
     private String email;
+
+    @Column(unique = true, nullable = false)
     private String cpf;
+
+    @Column(unique = true, nullable = false)
     private String rg;
+
     private String orgaoEmissor;
     private String uf;
     private String cargo;

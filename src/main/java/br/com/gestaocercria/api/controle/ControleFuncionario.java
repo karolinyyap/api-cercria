@@ -29,10 +29,20 @@ public class ControleFuncionario {
     }
 
     @PostMapping("/cadastro")
-    public Funcionario cadastrar(@RequestBody Funcionario f) {
+    public ResponseEntity<?> cadastrar(@RequestBody Funcionario f) {
+
+        Funcionario existente = acao.findByEmail(f.getEmail());
+
+        if (existente != null) {
+            return ResponseEntity
+                    .status(HttpStatus.CONFLICT)
+                    .body("Já existe um funcionário cadastrado com este e-mail.");
+        }
+
         String senhaHash = encoder.encode(f.getSenha());
         f.setSenha(senhaHash);
-        return acao.save(f);
+
+        return ResponseEntity.ok(acao.save(f));
     }
 
     @GetMapping("/listagem")
@@ -46,17 +56,29 @@ public class ControleFuncionario {
     }
 
     @PutMapping("/edicao")
-    public Funcionario editar(@RequestBody Funcionario f) {
+    public ResponseEntity<?> editar(@RequestBody Funcionario f) {
 
         Funcionario existente = acao.findById(f.getId()).orElse(null);
 
         if (existente == null) {
-            return null;
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body("Funcionário não encontrado.");
+        }
+
+        Funcionario funcionarioComEmail = acao.findByEmail(f.getEmail());
+
+        if (funcionarioComEmail != null &&
+            funcionarioComEmail.getId() != f.getId()) {
+
+            return ResponseEntity
+                    .status(HttpStatus.CONFLICT)
+                    .body("Já existe outro funcionário cadastrado com este e-mail.");
         }
 
         f.setSenha(existente.getSenha());
 
-        return acao.save(f);
+        return ResponseEntity.ok(acao.save(f));
     }
 
     @PutMapping("/excluir/{id}")
