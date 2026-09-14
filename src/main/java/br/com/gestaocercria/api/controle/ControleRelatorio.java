@@ -80,17 +80,32 @@ public class ControleRelatorio {
                         resultado.campos()
                     );
 
-            /*
-             * Compila o Jasper
-             */
-            JasperReport report =
+        JasperReport jasperReport;
+
+        try {
+
+            jasperReport =
                     JasperCompileManager.compileReport(
-                        new ByteArrayInputStream(
-                            jrxml.getBytes(
-                                StandardCharsets.UTF_8
+                            new ByteArrayInputStream(
+                                    jrxml.getBytes(StandardCharsets.UTF_8)
                             )
-                        )
                     );
+
+        } catch (Exception e) {
+
+            System.out.println("========== ERRO AO COMPILAR JRXML ==========");
+            System.out.println(jrxml);
+            System.out.println("============================================");
+
+            e.printStackTrace();
+
+            if (e.getCause() != null) {
+                System.out.println("=============== CAUSA =======================");
+                e.getCause().printStackTrace();
+            }
+
+            throw e;
+        }
 
             /*
              * Dados vindos diretamente do SQL
@@ -121,7 +136,7 @@ public class ControleRelatorio {
              */
             JasperPrint print =
                     JasperFillManager.fillReport(
-                        report,
+                        jasperReport,
                         parametros,
                         dataSource
                     );
