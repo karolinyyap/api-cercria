@@ -91,21 +91,26 @@ public class ControleRelatorio {
                             )
                     );
 
-        } catch (Exception e) {
-
+        }  catch (Exception e) {
             System.out.println("========== ERRO AO COMPILAR JRXML ==========");
-            System.out.println(jrxml);
-            System.out.println("============================================");
 
-            e.printStackTrace();
+            Throwable causa = e;
 
-            if (e.getCause() != null) {
-                System.out.println("=============== CAUSA =======================");
-                e.getCause().printStackTrace();
+            while (causa != null) {
+
+                System.out.println("TIPO: " + causa.getClass().getName());
+                System.out.println("MENSAGEM: " + causa.getMessage());
+
+                causa = causa.getCause();
+
+                System.out.println("--------------------------------------------");
             }
+
+            System.out.println("============================================");
 
             throw e;
         }
+            
 
             /*
              * Dados vindos diretamente do SQL
