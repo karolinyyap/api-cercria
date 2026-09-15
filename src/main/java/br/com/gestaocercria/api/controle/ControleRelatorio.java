@@ -1658,8 +1658,6 @@ public class ControleRelatorio {
                 new StringBuilder();
 
         xml.append("""
-            <?xml version="1.0" encoding="UTF-8"?>
-
             <jasperReport
                 xmlns="http://jasperreports.sourceforge.net/jasperreports"
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
