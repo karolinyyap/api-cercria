@@ -136,6 +136,16 @@ public class ControleRelatorio {
                 resultado.registros().size()
             );
 
+            parametros.put(
+                "DATA_HORA",
+                java.time.LocalDateTime.now()
+                    .format(
+                        java.time.format.DateTimeFormatter.ofPattern(
+                            "dd/MM/yyyy HH:mm"
+                        )
+                    )
+            );
+
             /*
              * Preenche o relatório
              */
@@ -1523,17 +1533,6 @@ public class ControleRelatorio {
                 );
 
         if (!valor.isBlank()) {
-
-            /*
-             * As entidades EntradaProduto,
-             * SaidaProduto, EstoqueMedicamento,
-             * AgendaMedicamento etc. possuem
-             * algumas datas como String.
-             *
-             * O sistema Angular trabalha com
-             * yyyy-MM-dd, portanto podemos
-             * comparar como texto.
-             */
             where.add(
                 coluna
                 + " "
@@ -1551,16 +1550,22 @@ public class ControleRelatorio {
     // ============================================================
 
     private String criarJrxml(
-            String tipo,
-            List<String> campos) {
+        String tipo,
+        List<String> campos) {
 
         int totalCampos = campos.size();
 
-        int larguraPagina = 802;
+        /*
+        * ============================================================
+        * CONFIGURAÇÃO DA PÁGINA
+        * ============================================================
+        */
+
+        int larguraPagina = 535;
 
         int larguraCampo =
                 Math.max(
-                        50,
+                        45,
                         larguraPagina / totalCampos
                 );
 
@@ -1568,12 +1573,10 @@ public class ControleRelatorio {
 
         /*
         * ============================================================
-        * INÍCIO DO RELATÓRIO
+        * RELATÓRIO
         * ============================================================
-        *
-        * Não colocamos <?xml ... ?> aqui.
-        * O Jasper consegue interpretar o JRXML sem essa declaração.
         */
+
         xml.append("""
             <jasperReport
                 xmlns="http://jasperreports.sourceforge.net/jasperreports"
@@ -1582,14 +1585,14 @@ public class ControleRelatorio {
                     http://jasperreports.sourceforge.net/jasperreports
                     http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
                 name="relatorioDinamico"
-                pageWidth="842"
-                pageHeight="595"
-                orientation="Landscape"
-                columnWidth="802"
-                leftMargin="20"
-                rightMargin="20"
-                topMargin="20"
-                bottomMargin="20">
+                pageWidth="595"
+                pageHeight="842"
+                orientation="Portrait"
+                columnWidth="535"
+                leftMargin="30"
+                rightMargin="30"
+                topMargin="30"
+                bottomMargin="30">
 
         """);
 
@@ -1597,9 +1600,8 @@ public class ControleRelatorio {
         * ============================================================
         * PARÂMETROS
         * ============================================================
-        *
-        * Os parâmetros precisam aparecer antes dos fields.
         */
+
         xml.append("""
             <parameter
                 name="TITULO"
@@ -1609,6 +1611,10 @@ public class ControleRelatorio {
                 name="TOTAL"
                 class="java.lang.Integer"/>
 
+            <parameter
+                name="DATA_HORA"
+                class="java.lang.String"/>
+
         """);
 
         /*
@@ -1616,6 +1622,7 @@ public class ControleRelatorio {
         * CAMPOS
         * ============================================================
         */
+
         for (String campo : campos) {
 
             xml.append("""
@@ -1633,22 +1640,75 @@ public class ControleRelatorio {
         * TÍTULO
         * ============================================================
         */
+
         xml.append("""
             <title>
 
-                <band height="65">
+                <band height="105">
 
-                    <textField>
+                    <!-- LOGO -->
+
+                    <image>
 
                         <reportElement
                             x="0"
                             y="0"
-                            width="802"
-                            height="35"/>
+                            width="65"
+                            height="65"/>
+
+                        <imageExpression>
+                            <![CDATA[
+                                "logo.png"
+                            ]]>
+                        </imageExpression>
+
+                    </image>
+
+
+                    <!-- NOME DO SISTEMA -->
+
+                    <staticText>
+
+                        <reportElement
+                            x="80"
+                            y="5"
+                            width="455"
+                            height="25"/>
 
                         <textElement
-                            textAlignment="Center"
-                            verticalAlignment="Middle"/>
+                            verticalAlignment="Middle">
+
+                            <font
+                                size="16"
+                                isBold="true"/>
+
+                        </textElement>
+
+                        <text>
+                            <![CDATA[GESTÃO DE CASA DE ACOLHIMENTO]]>
+                        </text>
+
+                    </staticText>
+
+
+                    <!-- TÍTULO DO RELATÓRIO -->
+
+                    <textField>
+
+                        <reportElement
+                            x="80"
+                            y="32"
+                            width="455"
+                            height="25"/>
+
+                        <textElement
+                            verticalAlignment="Middle">
+
+                            <font
+                                size="13"
+                                isBold="true"/>
+
+                        </textElement>
 
                         <textFieldExpression>
                             <![CDATA[$P{TITULO}]]>
@@ -1656,23 +1716,45 @@ public class ControleRelatorio {
 
                     </textField>
 
+
+                    <!-- TOTAL -->
+
                     <textField>
 
                         <reportElement
-                            x="0"
-                            y="40"
-                            width="802"
+                            x="80"
+                            y="60"
+                            width="455"
                             height="20"/>
 
                         <textElement
-                            textAlignment="Center"
-                            verticalAlignment="Middle"/>
+                            verticalAlignment="Middle">
+
+                            <font
+                                size="9"/>
+
+                        </textElement>
 
                         <textFieldExpression>
-                            <![CDATA["Total de registros: " + $P{TOTAL}]]>
+                            <![CDATA[
+                                "Total de registros: " + $P{TOTAL}
+                            ]]>
                         </textFieldExpression>
 
                     </textField>
+
+
+                    <!-- LINHA -->
+
+                    <line>
+
+                        <reportElement
+                            x="0"
+                            y="95"
+                            width="535"
+                            height="1"/>
+
+                    </line>
 
                 </band>
 
@@ -1682,9 +1764,10 @@ public class ControleRelatorio {
 
         /*
         * ============================================================
-        * CABEÇALHO DAS COLUNAS
+        * CABEÇALHO DA TABELA
         * ============================================================
         */
+
         xml.append("""
             <columnHeader>
 
@@ -1703,15 +1786,29 @@ public class ControleRelatorio {
                         x="%d"
                         y="0"
                         width="%d"
-                        height="35"/>
+                        height="35"
+                        mode="Opaque"
+                        backcolor="#1e3a8a"/>
 
                     <box>
-                        <pen lineWidth="1"/>
+
+                        <pen
+                            lineWidth="0.5"/>
+
                     </box>
 
                     <textElement
                         textAlignment="Center"
-                        verticalAlignment="Middle"/>
+                        verticalAlignment="Middle">
+
+                        <font
+                            size="9"
+                            isBold="true"
+                            pdfFontName="Helvetica-Bold"
+                            pdfEncoding="Cp1252"
+                            isPdfEmbedded="false"/>
+
+                    </textElement>
 
                     <text>
                         <![CDATA[%s]]>
@@ -1737,9 +1834,10 @@ public class ControleRelatorio {
 
         /*
         * ============================================================
-        * DETALHES / LINHAS DO RELATÓRIO
+        * DETALHES
         * ============================================================
         */
+
         xml.append("""
             <detail>
 
@@ -1747,38 +1845,110 @@ public class ControleRelatorio {
 
         """);
 
+        xml.append("""
+                    <rectangle>
+
+                        <reportElement
+                            x="0"
+                            y="0"
+                            width="535"
+                            height="30"
+                            mode="Opaque"
+                            backcolor="#ffffff"/>
+
+                    </rectangle>
+
+        """);
+
         x = 0;
 
         for (String campo : campos) {
 
+            /*
+            * Tratamento especial para datas e horas.
+            */
+
+            String expressao;
+
+            if (campo.equalsIgnoreCase("data")
+                    || campo.equalsIgnoreCase("dataEntrada")
+                    || campo.equalsIgnoreCase("dataSaida")
+                    || campo.equalsIgnoreCase("dataNascimento")
+                    || campo.equalsIgnoreCase("dataValidade")
+                    || campo.equalsIgnoreCase("dtAquisicao")
+                    || campo.equalsIgnoreCase("dataInicio")
+                    || campo.equalsIgnoreCase("dataFim")) {
+
+                expressao = """
+                    ($F{%s} == null
+                        ? ""
+                        : new java.text.SimpleDateFormat("dd/MM/yyyy")
+                            .format($F{%s}))
+                    """.formatted(
+                        escaparXml(campo),
+                        escaparXml(campo)
+                );
+
+            } else if (campo.equalsIgnoreCase("hora")
+                    || campo.equalsIgnoreCase("horario")) {
+
+                expressao = """
+                    ($F{%s} == null
+                        ? ""
+                        : new java.text.SimpleDateFormat("HH:mm")
+                            .format($F{%s}))
+                    """.formatted(
+                        escaparXml(campo),
+                        escaparXml(campo)
+                );
+
+            } else {
+
+                expressao = """
+                    $F{%s}
+                    """.formatted(
+                        escaparXml(campo)
+                );
+            }
+
             xml.append("""
-                <textField
-                    isBlankWhenNull="true">
+                    <textField
+                        isBlankWhenNull="true">
 
-                    <reportElement
-                        x="%d"
-                        y="0"
-                        width="%d"
-                        height="30"/>
+                        <reportElement
+                            x="%d"
+                            y="0"
+                            width="%d"
+                            height="30"/>
 
-                    <box>
-                        <pen lineWidth="0.5"/>
-                    </box>
+                        <box>
 
-                    <textElement
-                        textAlignment="Center"
-                        verticalAlignment="Middle"/>
+                            <pen
+                                lineWidth="0.3"/>
 
-                    <textFieldExpression>
-                        <![CDATA[$F{%s}]]>
-                    </textFieldExpression>
+                        </box>
 
-                </textField>
+                        <textElement
+                            textAlignment="Center"
+                            verticalAlignment="Middle">
+
+                            <font
+                                size="8"/>
+
+                        </textElement>
+
+                        <textFieldExpression>
+                            <![CDATA[
+                                %s
+                            ]]>
+                        </textFieldExpression>
+
+                    </textField>
 
             """.formatted(
                     x,
                     larguraCampo,
-                    escaparXml(campo)
+                    expressao
             ));
 
             x += larguraCampo;
@@ -1796,25 +1966,75 @@ public class ControleRelatorio {
         * RODAPÉ
         * ============================================================
         */
+
         xml.append("""
             <pageFooter>
 
-                <band height="25">
+                <band height="35">
+
+                    <!-- LINHA -->
+
+                    <line>
+
+                        <reportElement
+                            x="0"
+                            y="0"
+                            width="535"
+                            height="1"/>
+
+                    </line>
+
+
+                    <!-- DATA E HORA -->
 
                     <textField>
 
                         <reportElement
                             x="0"
-                            y="0"
-                            width="802"
+                            y="8"
+                            width="300"
+                            height="20"/>
+
+                        <textElement
+                            verticalAlignment="Middle">
+
+                            <font
+                                size="8"/>
+
+                        </textElement>
+
+                        <textFieldExpression>
+                            <![CDATA[
+                                $P{DATA_HORA}
+                            ]]>
+                        </textFieldExpression>
+
+                    </textField>
+
+
+                    <!-- PÁGINA -->
+
+                    <textField>
+
+                        <reportElement
+                            x="335"
+                            y="8"
+                            width="200"
                             height="20"/>
 
                         <textElement
                             textAlignment="Right"
-                            verticalAlignment="Middle"/>
+                            verticalAlignment="Middle">
+
+                            <font
+                                size="8"/>
+
+                        </textElement>
 
                         <textFieldExpression>
-                            <![CDATA["Página " + $V{PAGE_NUMBER}]]>
+                            <![CDATA[
+                                "Página " + $V{PAGE_NUMBER}
+                            ]]>
                         </textFieldExpression>
 
                     </textField>
@@ -1827,9 +2047,10 @@ public class ControleRelatorio {
 
         /*
         * ============================================================
-        * FIM DO RELATÓRIO
+        * FIM
         * ============================================================
         */
+
         xml.append("""
             </jasperReport>
         """);
