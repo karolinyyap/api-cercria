@@ -1646,25 +1646,6 @@ public class ControleRelatorio {
 
                 <band height="105">
 
-                    <!-- LOGO -->
-
-                    <image>
-
-                        <reportElement
-                            x="0"
-                            y="0"
-                            width="65"
-                            height="65"/>
-
-                        <imageExpression>
-                            <![CDATA[
-                                "logo.png"
-                            ]]>
-                        </imageExpression>
-
-                    </image>
-
-
                     <!-- NOME DO SISTEMA -->
 
                     <staticText>
