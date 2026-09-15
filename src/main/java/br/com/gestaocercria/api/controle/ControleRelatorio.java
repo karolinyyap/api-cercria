@@ -3,20 +3,15 @@ package br.com.gestaocercria.api.controle;
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
 import java.sql.Date;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+
 @RestController
 @RequestMapping("/relatorio")
 public class ControleRelatorio {
@@ -26,6 +21,10 @@ public class ControleRelatorio {
     public ControleRelatorio(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
+
+    // ============================================================
+    // GERAR
+    // ============================================================
 
     @PostMapping(
         value = "/gerar",
@@ -37,32 +36,26 @@ public class ControleRelatorio {
 
         try {
 
-            String tipo = string(dados.get("tipo"));
+            String tipo =
+                    string(dados.get("tipo"));
 
             if (tipo.isBlank()) {
                 return ResponseEntity.badRequest().build();
             }
 
-            /*
-             * Campos selecionados no Angular
-             */
             List<String> campos =
-                    listaStrings(dados.get("campos"));
+                    listaStrings(
+                        dados.get("campos")
+                    );
 
             if (campos.isEmpty()) {
                 return ResponseEntity.badRequest().build();
             }
 
-            /*
-             * Confere se o tipo existe
-             */
             if (!TIPOS.containsKey(tipo)) {
                 return ResponseEntity.badRequest().build();
             }
 
-            /*
-             * Monta e executa o SQL
-             */
             ResultadoSQL resultado =
                     executarSQL(
                         tipo,
@@ -71,58 +64,26 @@ public class ControleRelatorio {
                         mapa(dados.get("ordenacao"))
                     );
 
-            /*
-             * Gera o JRXML dinamicamente
-             */
             String jrxml =
                     criarJrxml(
                         tipo,
                         resultado.campos()
                     );
 
-        JasperReport jasperReport;
-
-        try {
-
-            jasperReport =
+            JasperReport report =
                     JasperCompileManager.compileReport(
-                            new ByteArrayInputStream(
-                                    jrxml.getBytes(StandardCharsets.UTF_8)
+                        new ByteArrayInputStream(
+                            jrxml.getBytes(
+                                StandardCharsets.UTF_8
                             )
+                        )
                     );
 
-        }  catch (Exception e) {
-            System.out.println("========== ERRO AO COMPILAR JRXML ==========");
-
-            Throwable causa = e;
-
-            while (causa != null) {
-
-                System.out.println("TIPO: " + causa.getClass().getName());
-                System.out.println("MENSAGEM: " + causa.getMessage());
-
-                causa = causa.getCause();
-
-                System.out.println("--------------------------------------------");
-            }
-
-            System.out.println("============================================");
-
-            throw e;
-        }
-            
-
-            /*
-             * Dados vindos diretamente do SQL
-             */
             JRBeanCollectionDataSource dataSource =
                     new JRBeanCollectionDataSource(
                         resultado.registros()
                     );
 
-            /*
-             * Parâmetros do relatório
-             */
             Map<String, Object> parametros =
                     new HashMap<>();
 
@@ -136,29 +97,13 @@ public class ControleRelatorio {
                 resultado.registros().size()
             );
 
-            parametros.put(
-                "DATA_HORA",
-                java.time.LocalDateTime.now()
-                    .format(
-                        java.time.format.DateTimeFormatter.ofPattern(
-                            "dd/MM/yyyy HH:mm"
-                        )
-                    )
-            );
-
-            /*
-             * Preenche o relatório
-             */
             JasperPrint print =
                     JasperFillManager.fillReport(
-                        jasperReport,
+                        report,
                         parametros,
                         dataSource
                     );
 
-            /*
-             * Converte para PDF
-             */
             byte[] pdf =
                     JasperExportManager
                         .exportReportToPdf(print);
@@ -179,7 +124,9 @@ public class ControleRelatorio {
 
             e.printStackTrace();
 
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity
+                    .badRequest()
+                    .build();
 
         } catch (Exception e) {
 
@@ -191,74 +138,128 @@ public class ControleRelatorio {
         }
     }
 
+    // ============================================================
+    // TIPOS DE RELATÓRIO
+    // ============================================================
 
     private static final Map<String, TipoConfig> TIPOS =
             criarTipos();
-
 
     private static Map<String, TipoConfig> criarTipos() {
 
         Map<String, TipoConfig> tipos =
                 new HashMap<>();
 
-        // --------------------------------------------------------
+        // ========================================================
         // ACOLHIDOS
-        // --------------------------------------------------------
+        // ========================================================
 
         tipos.put(
             "acolhidos",
             new TipoConfig(
                 "acolhido",
+
                 Map.ofEntries(
 
-                    Map.entry("id", "a.id"),
-                    Map.entry("nome", "a.nome"),
-                    Map.entry("cpf", "a.cpf"),
+                    Map.entry(
+                        "id",
+                        "a.id"
+                    ),
+
+                    Map.entry(
+                        "nome",
+                        "a.nome"
+                    ),
+
+                    Map.entry(
+                        "cpf",
+                        "a.cpf"
+                    ),
+
                     Map.entry(
                         "dataNascimento",
                         "a.data_nascimento"
                     ),
-                    Map.entry("escola", "a.escola"),
+
+                    Map.entry(
+                        "escola",
+                        "a.escola"
+                    ),
+
                     Map.entry(
                         "localFamiliar",
                         "a.local_familiar"
                     ),
+
                     Map.entry(
                         "numeroProcesso",
                         "a.numero_processo"
                     ),
-                    Map.entry("vara", "a.vara"),
+
+                    Map.entry(
+                        "vara",
+                        "a.vara"
+                    ),
+
                     Map.entry(
                         "dataEntrada",
                         "a.data_entrada"
                     ),
+
                     Map.entry(
                         "dataSaida",
                         "a.data_saida"
                     ),
+
                     Map.entry(
                         "corPele",
                         "a.cor_pele"
                     ),
+
                     Map.entry(
                         "deficiencia",
                         "a.deficiencia"
                     ),
-                    Map.entry("ppcaam", "a.ppcaam")
+
+                    Map.entry(
+                        "ppcaam",
+                        "a.ppcaam"
+                    ),
+
+                    Map.entry(
+                        "tamanhoCamiseta",
+                        "a.tamanho_camiseta"
+                    ),
+
+                    Map.entry(
+                        "tamanhoBermudaCalca",
+                        "a.tamanho_bermuda_calca"
+                    ),
+
+                    Map.entry(
+                        "tamanhoCalcado",
+                        "a.tamanho_calcado"
+                    ),
+
+                    Map.entry(
+                        "tamanhoRoupaIntima",
+                        "a.tamanho_roupa_intima"
+                    )
                 ),
+
                 "a"
             )
         );
 
-
-        // --------------------------------------------------------
+        // ========================================================
         // MEDICAMENTOS
-        // --------------------------------------------------------
+        // ========================================================
 
         tipos.put(
             "medicamentos",
             new TipoConfig(
                 "medicamento",
+
                 Map.of(
                     "id",
                     "m.id",
@@ -272,19 +273,20 @@ public class ControleRelatorio {
                     "unidadeMedida",
                     "m.unidade_medida"
                 ),
+
                 "m"
             )
         );
 
-
-        // --------------------------------------------------------
+        // ========================================================
         // PRODUTOS
-        // --------------------------------------------------------
+        // ========================================================
 
         tipos.put(
             "produtos",
             new TipoConfig(
                 "produto",
+
                 Map.of(
                     "id",
                     "p.id",
@@ -298,68 +300,111 @@ public class ControleRelatorio {
                     "unidadeMedida",
                     "p.unidade_medida"
                 ),
+
                 "p"
             )
         );
 
-
-        // --------------------------------------------------------
+        // ========================================================
         // FUNCIONÁRIOS
-        // --------------------------------------------------------
+        // ========================================================
 
         tipos.put(
             "funcionarios",
             new TipoConfig(
                 "funcionario",
+
                 Map.ofEntries(
 
-                    Map.entry("id", "f.id"),
-                    Map.entry("nome", "f.nome"),
-                    Map.entry("telefone", "f.telefone"),
+                    Map.entry(
+                        "id",
+                        "f.id"
+                    ),
+
+                    Map.entry(
+                        "nome",
+                        "f.nome"
+                    ),
+
+                    Map.entry(
+                        "cpf",
+                        "f.cpf"
+                    ),
+
+                    Map.entry(
+                        "telefone",
+                        "f.telefone"
+                    ),
+
                     Map.entry(
                         "dataNascimento",
                         "f.data_nascimento"
                     ),
-                    Map.entry("email", "f.email"),
-                    Map.entry("cpf", "f.cpf"),
-                    Map.entry("rg", "f.rg"),
+
+                    Map.entry(
+                        "email",
+                        "f.email"
+                    ),
+
+                    Map.entry(
+                        "rg",
+                        "f.rg"
+                    ),
+
                     Map.entry(
                         "orgaoEmissor",
                         "f.orgao_emissor"
                     ),
-                    Map.entry("uf", "f.uf"),
-                    Map.entry("cargo", "f.cargo"),
+
+                    Map.entry(
+                        "uf",
+                        "f.uf"
+                    ),
+
+                    Map.entry(
+                        "cargo",
+                        "f.cargo"
+                    ),
+
                     Map.entry(
                         "escolaridade",
                         "f.escolaridade"
                     ),
+
                     Map.entry(
                         "cargaHoraria",
                         "f.carga_horaria"
                     ),
-                    Map.entry("sexo", "f.sexo"),
+
+                    Map.entry(
+                        "sexo",
+                        "f.sexo"
+                    ),
+
                     Map.entry(
                         "dataAdmissao",
                         "f.data_admissao"
                     ),
+
                     Map.entry(
                         "dataSaida",
                         "f.data_saida"
                     )
                 ),
+
                 "f"
             )
         );
 
-
-        // --------------------------------------------------------
+        // ========================================================
         // ESTOQUE DE MEDICAMENTOS
-        // --------------------------------------------------------
+        // ========================================================
 
         tipos.put(
             "estoqueMedicamentos",
             new TipoConfig(
                 "estoque_medicamento",
+
                 Map.ofEntries(
 
                     Map.entry(
@@ -407,7 +452,9 @@ public class ControleRelatorio {
                         "e.data_entrada"
                     )
                 ),
+
                 "e",
+
                 """
                 LEFT JOIN medicamento m
                     ON m.id = e.medicamento_id
@@ -418,25 +465,20 @@ public class ControleRelatorio {
             )
         );
 
-
-        // --------------------------------------------------------
-        // ENTRADAS
-        // --------------------------------------------------------
+        // ========================================================
+        // ENTRADAS DE PRODUTOS
+        // ========================================================
 
         tipos.put(
             "entradas",
             new TipoConfig(
                 "entrada_produto",
+
                 Map.ofEntries(
 
                     Map.entry(
                         "id",
                         "e.id"
-                    ),
-
-                    Map.entry(
-                        "medicamento",
-                        "p.nome"
                     ),
 
                     Map.entry(
@@ -484,7 +526,9 @@ public class ControleRelatorio {
                         "e.quantidade_atual"
                     )
                 ),
+
                 "e",
+
                 """
                 LEFT JOIN produto p
                     ON p.id = e.produto_id
@@ -495,15 +539,15 @@ public class ControleRelatorio {
             )
         );
 
-
-        // --------------------------------------------------------
-        // SAÍDAS
-        // --------------------------------------------------------
+        // ========================================================
+        // SAÍDAS DE PRODUTOS
+        // ========================================================
 
         tipos.put(
             "saidas",
             new TipoConfig(
                 "saida_produto",
+
                 Map.ofEntries(
 
                     Map.entry(
@@ -513,11 +557,6 @@ public class ControleRelatorio {
 
                     Map.entry(
                         "produto",
-                        "p.nome"
-                    ),
-
-                    Map.entry(
-                        "medicamento",
                         "p.nome"
                     ),
 
@@ -546,7 +585,9 @@ public class ControleRelatorio {
                         "f.nome"
                     )
                 ),
+
                 "s",
+
                 """
                 LEFT JOIN produto p
                     ON p.id = s.produto_id
@@ -557,15 +598,15 @@ public class ControleRelatorio {
             )
         );
 
-
-        // --------------------------------------------------------
+        // ========================================================
         // USO DE MEDICAMENTOS
-        // --------------------------------------------------------
+        // ========================================================
 
         tipos.put(
             "usoMedicamentos",
             new TipoConfig(
                 "controle_uso_medicamento",
+
                 Map.ofEntries(
 
                     Map.entry(
@@ -638,7 +679,9 @@ public class ControleRelatorio {
                         "f.nome"
                     )
                 ),
+
                 "c",
+
                 """
                 LEFT JOIN medicamento m
                     ON m.id = c.medicamento_id
@@ -652,15 +695,15 @@ public class ControleRelatorio {
             )
         );
 
-
-        // --------------------------------------------------------
+        // ========================================================
         // AGENDA DE MEDICAMENTOS
-        // --------------------------------------------------------
+        // ========================================================
 
         tipos.put(
             "agendaMedicamentos",
             new TipoConfig(
                 "agenda_medicamento",
+
                 Map.ofEntries(
 
                     Map.entry(
@@ -723,7 +766,9 @@ public class ControleRelatorio {
                         "f.nome"
                     )
                 ),
+
                 "a",
+
                 """
                 LEFT JOIN medicamento m
                     ON m.id = a.medicamento_id
@@ -737,15 +782,15 @@ public class ControleRelatorio {
             )
         );
 
-
-        // --------------------------------------------------------
+        // ========================================================
         // PATRIMÔNIO
-        // --------------------------------------------------------
+        // ========================================================
 
         tipos.put(
             "patrimonio",
             new TipoConfig(
                 "patrimonio",
+
                 Map.ofEntries(
 
                     Map.entry(
@@ -768,19 +813,20 @@ public class ControleRelatorio {
                         "p.dt_aquisicao"
                     )
                 ),
+
                 "p"
             )
         );
 
-
-        // --------------------------------------------------------
+        // ========================================================
         // EVENTOS
-        // --------------------------------------------------------
+        // ========================================================
 
         tipos.put(
             "eventos",
             new TipoConfig(
                 "evento",
+
                 Map.ofEntries(
 
                     Map.entry(
@@ -807,6 +853,7 @@ public class ControleRelatorio {
                         "descricao",
                         "e.descricao"
                     ),
+
                     Map.entry(
                         "acolhidos",
                         """
@@ -837,15 +884,13 @@ public class ControleRelatorio {
                         """
                     )
                 ),
+
                 "e"
             )
-
-            
         );
 
         return tipos;
     }
-
 
     // ============================================================
     // EXECUTAR SQL
@@ -860,18 +905,13 @@ public class ControleRelatorio {
         TipoConfig config =
                 TIPOS.get(tipo);
 
-        /*
-         * --------------------------------------------------------
-         * CAMPOS
-         * --------------------------------------------------------
-         */
-
         List<String> camposValidos =
                 new ArrayList<>();
 
         for (String campo : campos) {
 
             if (config.campos().containsKey(campo)) {
+
                 camposValidos.add(campo);
             }
         }
@@ -883,19 +923,20 @@ public class ControleRelatorio {
             );
         }
 
-
-        /*
-         * --------------------------------------------------------
-         * SELECT
-         * --------------------------------------------------------
-         */
+        // ========================================================
+        // SELECT
+        // ========================================================
 
         StringBuilder sql =
-                new StringBuilder("SELECT ");
+                new StringBuilder(
+                    "SELECT "
+                );
 
-        for (int i = 0;
-             i < camposValidos.size();
-             i++) {
+        for (
+            int i = 0;
+            i < camposValidos.size();
+            i++
+        ) {
 
             if (i > 0) {
                 sql.append(", ");
@@ -908,27 +949,56 @@ public class ControleRelatorio {
                 config.campos().get(campo)
             );
 
-            sql.append(" AS ");
+            sql.append(
+                " AS "
+            );
 
-            sql.append(campo);
+            sql.append(
+                campo
+            );
         }
+
+        // ========================================================
+        // FROM
+        // ========================================================
 
         sql.append(
-            " FROM " + config.tabela() + " " + config.alias()
+            " FROM "
         );
 
-        sql.append(" ");
+        sql.append(
+            config.tabela()
+        );
 
-        if (config.joins() != null) {
-            sql.append(config.joins());
+        sql.append(
+            " "
+        );
+
+        sql.append(
+            config.alias()
+        );
+
+        // ========================================================
+        // JOINS
+        // ========================================================
+
+        if (
+            config.joins() != null
+            && !config.joins().isBlank()
+        ) {
+
+            sql.append(
+                " "
+            );
+
+            sql.append(
+                config.joins()
+            );
         }
 
-
-        /*
-         * --------------------------------------------------------
-         * WHERE
-         * --------------------------------------------------------
-         */
+        // ========================================================
+        // WHERE
+        // ========================================================
 
         List<String> where =
                 new ArrayList<>();
@@ -950,10 +1020,11 @@ public class ControleRelatorio {
             parametros
         );
 
-
         if (!where.isEmpty()) {
 
-            sql.append(" WHERE ");
+            sql.append(
+                " WHERE "
+            );
 
             sql.append(
                 String.join(
@@ -963,47 +1034,64 @@ public class ControleRelatorio {
             );
         }
 
-
-        /*
-         * --------------------------------------------------------
-         * ORDER BY
-         * --------------------------------------------------------
-         */
+        // ========================================================
+        // ORDER BY
+        // ========================================================
 
         String campoOrdenacao =
                 string(
-                    ordenacao.get("campo")
+                    ordenacao.get(
+                        "campo"
+                    )
                 );
 
         String ordem =
                 string(
-                    ordenacao.get("ordem")
+                    ordenacao.get(
+                        "ordem"
+                    )
                 );
 
-        if (!campoOrdenacao.isBlank()
-                && config.campos()
-                    .containsKey(campoOrdenacao)) {
+        if (
+            !campoOrdenacao.isBlank()
+            && config.campos()
+                .containsKey(
+                    campoOrdenacao
+                )
+        ) {
 
-            sql.append(" ORDER BY ");
+            sql.append(
+                " ORDER BY "
+            );
 
             sql.append(
                 config.campos()
-                    .get(campoOrdenacao)
+                    .get(
+                        campoOrdenacao
+                    )
             );
 
-            if ("desc".equalsIgnoreCase(ordem)) {
-                sql.append(" DESC");
+            if (
+                "desc".equalsIgnoreCase(
+                    ordem
+                )
+            ) {
+
+                sql.append(
+                    " DESC"
+                );
+
             } else {
-                sql.append(" ASC");
+
+                sql.append(
+                    " ASC"
+                );
             }
         }
 
-
-        /*
-         * --------------------------------------------------------
-         * EXECUTA O SQL
-         * --------------------------------------------------------
-         */
+        // ========================================================
+        // LOG
+        // ========================================================
 
         System.out.println(
             "\n========== RELATÓRIO =========="
@@ -1025,6 +1113,9 @@ public class ControleRelatorio {
             "===============================\n"
         );
 
+        // ========================================================
+        // EXECUTA
+        // ========================================================
 
         List<Map<String, Object>> registros =
                 jdbcTemplate.queryForList(
@@ -1038,9 +1129,8 @@ public class ControleRelatorio {
         );
     }
 
-
     // ============================================================
-    // FILTRO EXCLUIDO
+    // FILTRO EXCLUÍDO
     // ============================================================
 
     private void adicionarCondicaoExcluido(
@@ -1070,7 +1160,6 @@ public class ControleRelatorio {
         }
     }
 
-
     // ============================================================
     // FILTROS
     // ============================================================
@@ -1083,9 +1172,9 @@ public class ControleRelatorio {
 
         switch (tipo) {
 
-            // ----------------------------------------------------
+            // ====================================================
             // PRODUTOS
-            // ----------------------------------------------------
+            // ====================================================
 
             case "produtos":
 
@@ -1107,10 +1196,9 @@ public class ControleRelatorio {
 
                 break;
 
-
-            // ----------------------------------------------------
+            // ====================================================
             // MEDICAMENTOS
-            // ----------------------------------------------------
+            // ====================================================
 
             case "medicamentos":
 
@@ -1132,10 +1220,9 @@ public class ControleRelatorio {
 
                 break;
 
-
-            // ----------------------------------------------------
+            // ====================================================
             // ACOLHIDOS
-            // ----------------------------------------------------
+            // ====================================================
 
             case "acolhidos":
 
@@ -1183,10 +1270,9 @@ public class ControleRelatorio {
 
                 break;
 
-
-            // ----------------------------------------------------
+            // ====================================================
             // FUNCIONÁRIOS
-            // ----------------------------------------------------
+            // ====================================================
 
             case "funcionarios":
 
@@ -1216,10 +1302,9 @@ public class ControleRelatorio {
 
                 break;
 
-
-            // ----------------------------------------------------
+            // ====================================================
             // ESTOQUE
-            // ----------------------------------------------------
+            // ====================================================
 
             case "estoqueMedicamentos":
 
@@ -1259,10 +1344,9 @@ public class ControleRelatorio {
 
                 break;
 
-
-            // ----------------------------------------------------
+            // ====================================================
             // ENTRADAS
-            // ----------------------------------------------------
+            // ====================================================
 
             case "entradas":
 
@@ -1294,10 +1378,9 @@ public class ControleRelatorio {
 
                 break;
 
-
-            // ----------------------------------------------------
+            // ====================================================
             // SAÍDAS
-            // ----------------------------------------------------
+            // ====================================================
 
             case "saidas":
 
@@ -1329,10 +1412,9 @@ public class ControleRelatorio {
 
                 break;
 
-
-            // ----------------------------------------------------
+            // ====================================================
             // USO DE MEDICAMENTOS
-            // ----------------------------------------------------
+            // ====================================================
 
             case "usoMedicamentos":
 
@@ -1356,10 +1438,9 @@ public class ControleRelatorio {
 
                 break;
 
-
-            // ----------------------------------------------------
+            // ====================================================
             // AGENDA
-            // ----------------------------------------------------
+            // ====================================================
 
             case "agendaMedicamentos":
 
@@ -1391,10 +1472,9 @@ public class ControleRelatorio {
 
                 break;
 
-
-            // ----------------------------------------------------
+            // ====================================================
             // PATRIMÔNIO
-            // ----------------------------------------------------
+            // ====================================================
 
             case "patrimonio":
 
@@ -1418,10 +1498,9 @@ public class ControleRelatorio {
 
                 break;
 
-
-            // ----------------------------------------------------
+            // ====================================================
             // EVENTOS
-            // ----------------------------------------------------
+            // ====================================================
 
             case "eventos":
 
@@ -1450,7 +1529,6 @@ public class ControleRelatorio {
         }
     }
 
-
     // ============================================================
     // FILTRO TEXTO
     // ============================================================
@@ -1464,7 +1542,9 @@ public class ControleRelatorio {
 
         String valor =
                 string(
-                    filtros.get(nomeFiltro)
+                    filtros.get(
+                        nomeFiltro
+                    )
                 );
 
         if (!valor.isBlank()) {
@@ -1476,11 +1556,12 @@ public class ControleRelatorio {
             );
 
             parametros.add(
-                "%" + valor.trim() + "%"
+                "%"
+                + valor.trim()
+                + "%"
             );
         }
     }
-
 
     // ============================================================
     // FILTRO DATA
@@ -1496,7 +1577,9 @@ public class ControleRelatorio {
 
         String valor =
                 string(
-                    filtros.get(nomeFiltro)
+                    filtros.get(
+                        nomeFiltro
+                    )
                 );
 
         if (!valor.isBlank()) {
@@ -1509,14 +1592,15 @@ public class ControleRelatorio {
             );
 
             parametros.add(
-                Date.valueOf(valor)
+                Date.valueOf(
+                    valor
+                )
             );
         }
     }
 
-
     // ============================================================
-    // FILTRO DATA ARMAZENADA COMO STRING
+    // FILTRO DATA STRING
     // ============================================================
 
     private void dataTexto(
@@ -1529,10 +1613,13 @@ public class ControleRelatorio {
 
         String valor =
                 string(
-                    filtros.get(nomeFiltro)
+                    filtros.get(
+                        nomeFiltro
+                    )
                 );
 
         if (!valor.isBlank()) {
+
             where.add(
                 coluna
                 + " "
@@ -1540,44 +1627,39 @@ public class ControleRelatorio {
                 + " ?"
             );
 
-            parametros.add(valor);
+            parametros.add(
+                valor
+            );
         }
     }
 
-
     // ============================================================
-    // JRXML DINÂMICO
+    // JRXML
     // ============================================================
 
     private String criarJrxml(
-        String tipo,
-        List<String> campos) {
+            String tipo,
+            List<String> campos) {
 
-        int totalCampos = campos.size();
+        int totalCampos =
+                campos.size();
 
-        /*
-        * ============================================================
-        * CONFIGURAÇÃO DA PÁGINA
-        * ============================================================
-        */
-
-        int larguraPagina = 535;
+        int larguraPagina =
+                802;
 
         int larguraCampo =
                 Math.max(
-                        45,
-                        larguraPagina / totalCampos
+                    50,
+                    larguraPagina
+                        / totalCampos
                 );
 
-        StringBuilder xml = new StringBuilder();
-
-        /*
-        * ============================================================
-        * RELATÓRIO
-        * ============================================================
-        */
+        StringBuilder xml =
+                new StringBuilder();
 
         xml.append("""
+            <?xml version="1.0" encoding="UTF-8"?>
+
             <jasperReport
                 xmlns="http://jasperreports.sourceforge.net/jasperreports"
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -1585,22 +1667,36 @@ public class ControleRelatorio {
                     http://jasperreports.sourceforge.net/jasperreports
                     http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
                 name="relatorioDinamico"
-                pageWidth="595"
-                pageHeight="842"
-                orientation="Portrait"
-                columnWidth="535"
-                leftMargin="30"
-                rightMargin="30"
-                topMargin="30"
-                bottomMargin="30">
+                pageWidth="842"
+                pageHeight="595"
+                orientation="Landscape"
+                columnWidth="802"
+                leftMargin="20"
+                rightMargin="20"
+                topMargin="20"
+                bottomMargin="20">
 
         """);
 
-        /*
-        * ============================================================
-        * PARÂMETROS
-        * ============================================================
-        */
+        // ========================================================
+        // CAMPOS
+        // ========================================================
+
+        for (String campo : campos) {
+
+            xml.append("""
+                <field
+                    name="%s"
+                    class="java.lang.Object"/>
+
+            """.formatted(
+                escaparXml(campo)
+            ));
+        }
+
+        // ========================================================
+        // PARÂMETROS
+        // ========================================================
 
         xml.append("""
             <parameter
@@ -1611,82 +1707,24 @@ public class ControleRelatorio {
                 name="TOTAL"
                 class="java.lang.Integer"/>
 
-            <parameter
-                name="DATA_HORA"
-                class="java.lang.String"/>
-
-        """);
-
-        /*
-        * ============================================================
-        * CAMPOS
-        * ============================================================
-        */
-
-        for (String campo : campos) {
-
-            xml.append("""
-                <field
-                    name="%s"
-                    class="java.lang.Object"/>
-
-            """.formatted(
-                    escaparXml(campo)
-            ));
-        }
-
-        /*
-        * ============================================================
-        * TÍTULO
-        * ============================================================
-        */
-
-        xml.append("""
             <title>
 
-                <band height="105">
-
-                    <!-- NOME DO SISTEMA -->
-
-                    <staticText>
-
-                        <reportElement
-                            x="80"
-                            y="5"
-                            width="455"
-                            height="25"/>
-
-                        <textElement
-                            verticalAlignment="Middle">
-
-                            <font
-                                size="16"
-                                isBold="true"/>
-
-                        </textElement>
-
-                        <text>
-                            <![CDATA[GESTÃO DE CASA DE ACOLHIMENTO]]>
-                        </text>
-
-                    </staticText>
-
-
-                    <!-- TÍTULO DO RELATÓRIO -->
+                <band height="65">
 
                     <textField>
 
                         <reportElement
-                            x="80"
-                            y="32"
-                            width="455"
-                            height="25"/>
+                            x="0"
+                            y="0"
+                            width="802"
+                            height="35"/>
 
                         <textElement
+                            textAlignment="Center"
                             verticalAlignment="Middle">
 
                             <font
-                                size="13"
+                                size="18"
                                 isBold="true"/>
 
                         </textElement>
@@ -1697,64 +1735,44 @@ public class ControleRelatorio {
 
                     </textField>
 
-
-                    <!-- TOTAL -->
-
                     <textField>
 
                         <reportElement
-                            x="80"
-                            y="60"
-                            width="455"
+                            x="0"
+                            y="40"
+                            width="802"
                             height="20"/>
 
                         <textElement
-                            verticalAlignment="Middle">
+                            textAlignment="Center">
 
                             <font
-                                size="9"/>
+                                size="10"/>
 
                         </textElement>
 
                         <textFieldExpression>
                             <![CDATA[
-                                "Total de registros: " + $P{TOTAL}
+                                "Total de registros: "
+                                + $P{TOTAL}
                             ]]>
                         </textFieldExpression>
 
                     </textField>
 
-
-                    <!-- LINHA -->
-
-                    <line>
-
-                        <reportElement
-                            x="0"
-                            y="95"
-                            width="535"
-                            height="1"/>
-
-                    </line>
-
                 </band>
 
             </title>
 
-        """);
-
-        /*
-        * ============================================================
-        * CABEÇALHO DA TABELA
-        * ============================================================
-        */
-
-        xml.append("""
             <columnHeader>
 
                 <band height="35">
 
         """);
+
+        // ========================================================
+        // CABEÇALHO
+        // ========================================================
 
         int x = 0;
 
@@ -1767,15 +1785,10 @@ public class ControleRelatorio {
                         x="%d"
                         y="0"
                         width="%d"
-                        height="35"
-                        mode="Opaque"
-                        backcolor="#1e3a8a"/>
+                        height="35"/>
 
                     <box>
-
-                        <pen
-                            lineWidth="0.5"/>
-
+                        <pen lineWidth="1"/>
                     </box>
 
                     <textElement
@@ -1784,10 +1797,7 @@ public class ControleRelatorio {
 
                         <font
                             size="9"
-                            isBold="true"
-                            pdfFontName="Helvetica-Bold"
-                            pdfEncoding="Cp1252"
-                            isPdfEmbedded="false"/>
+                            isBold="true"/>
 
                     </textElement>
 
@@ -1798,9 +1808,11 @@ public class ControleRelatorio {
                 </staticText>
 
             """.formatted(
-                    x,
-                    larguraCampo,
-                    escaparXml(nomeCampo(campo))
+                x,
+                larguraCampo,
+                escaparXml(
+                    nomeCampo(campo)
+                )
             ));
 
             x += larguraCampo;
@@ -1811,125 +1823,58 @@ public class ControleRelatorio {
 
             </columnHeader>
 
-        """);
-
-        /*
-        * ============================================================
-        * DETALHES
-        * ============================================================
-        */
-
-        xml.append("""
             <detail>
 
                 <band height="30">
 
         """);
 
-        xml.append("""
-                    <rectangle>
-
-                        <reportElement
-                            x="0"
-                            y="0"
-                            width="535"
-                            height="30"
-                            mode="Opaque"
-                            backcolor="#ffffff"/>
-
-                    </rectangle>
-
-        """);
+        // ========================================================
+        // VALORES
+        // ========================================================
 
         x = 0;
 
         for (String campo : campos) {
 
-            /*
-            * Tratamento especial para datas e horas.
-            */
-
-            String expressao;
-
-            if (campo.equalsIgnoreCase("data")
-                    || campo.equalsIgnoreCase("dataEntrada")
-                    || campo.equalsIgnoreCase("dataSaida")
-                    || campo.equalsIgnoreCase("dataNascimento")
-                    || campo.equalsIgnoreCase("dataValidade")
-                    || campo.equalsIgnoreCase("dtAquisicao")
-                    || campo.equalsIgnoreCase("dataInicio")
-                    || campo.equalsIgnoreCase("dataFim")) {
-
-                expressao = """
-                    ($F{%s} == null
-                        ? ""
-                        : new java.text.SimpleDateFormat("dd/MM/yyyy")
-                            .format($F{%s}))
-                    """.formatted(
-                        escaparXml(campo),
-                        escaparXml(campo)
-                );
-
-            } else if (campo.equalsIgnoreCase("hora")
-                    || campo.equalsIgnoreCase("horario")) {
-
-                expressao = """
-                    ($F{%s} == null
-                        ? ""
-                        : new java.text.SimpleDateFormat("HH:mm")
-                            .format($F{%s}))
-                    """.formatted(
-                        escaparXml(campo),
-                        escaparXml(campo)
-                );
-
-            } else {
-
-                expressao = """
-                    $F{%s}
-                    """.formatted(
-                        escaparXml(campo)
-                );
-            }
-
             xml.append("""
-                    <textField
-                        isBlankWhenNull="true">
+                <textField
+                    isBlankWhenNull="true">
 
-                        <reportElement
-                            x="%d"
-                            y="0"
-                            width="%d"
-                            height="30"/>
+                    <reportElement
+                        x="%d"
+                        y="0"
+                        width="%d"
+                        height="30"/>
 
-                        <box>
+                    <box>
+                        <pen lineWidth="0.5"/>
+                    </box>
 
-                            <pen
-                                lineWidth="0.3"/>
+                    <textElement
+                        textAlignment="Center"
+                        verticalAlignment="Middle">
 
-                        </box>
+                        <font
+                            size="8"/>
 
-                        <textElement
-                            textAlignment="Center"
-                            verticalAlignment="Middle">
+                    </textElement>
 
-                            <font
-                                size="8"/>
+                    <textFieldExpression>
+                        <![CDATA[
+                            $F{%s} == null
+                            ? ""
+                            : $F{%s}.toString()
+                        ]]>
+                    </textFieldExpression>
 
-                        </textElement>
-
-                        <textFieldExpression>
-                            <![CDATA[
-                                %s
-                            ]]>
-                        </textFieldExpression>
-
-                    </textField>
+                </textField>
 
             """.formatted(
-                    x,
-                    larguraCampo,
-                    expressao
+                x,
+                larguraCampo,
+                campo,
+                campo
             ));
 
             x += larguraCampo;
@@ -1940,44 +1885,20 @@ public class ControleRelatorio {
 
             </detail>
 
-        """);
-
-        /*
-        * ============================================================
-        * RODAPÉ
-        * ============================================================
-        */
-
-        xml.append("""
             <pageFooter>
 
-                <band height="35">
+                <band height="25">
 
-                    <!-- LINHA -->
-
-                    <line>
+                    <textField>
 
                         <reportElement
                             x="0"
                             y="0"
-                            width="535"
-                            height="1"/>
-
-                    </line>
-
-
-                    <!-- DATA E HORA -->
-
-                    <textField>
-
-                        <reportElement
-                            x="0"
-                            y="8"
-                            width="300"
+                            width="802"
                             height="20"/>
 
                         <textElement
-                            verticalAlignment="Middle">
+                            textAlignment="Right">
 
                             <font
                                 size="8"/>
@@ -1986,35 +1907,8 @@ public class ControleRelatorio {
 
                         <textFieldExpression>
                             <![CDATA[
-                                $P{DATA_HORA}
-                            ]]>
-                        </textFieldExpression>
-
-                    </textField>
-
-
-                    <!-- PÁGINA -->
-
-                    <textField>
-
-                        <reportElement
-                            x="335"
-                            y="8"
-                            width="200"
-                            height="20"/>
-
-                        <textElement
-                            textAlignment="Right"
-                            verticalAlignment="Middle">
-
-                            <font
-                                size="8"/>
-
-                        </textElement>
-
-                        <textFieldExpression>
-                            <![CDATA[
-                                "Página " + $V{PAGE_NUMBER}
+                                "Página "
+                                + $V{PAGE_NUMBER}
                             ]]>
                         </textFieldExpression>
 
@@ -2024,21 +1918,11 @@ public class ControleRelatorio {
 
             </pageFooter>
 
-        """);
-
-        /*
-        * ============================================================
-        * FIM
-        * ============================================================
-        */
-
-        xml.append("""
             </jasperReport>
         """);
 
         return xml.toString();
     }
-
 
     // ============================================================
     // NOME DOS CAMPOS
@@ -2087,6 +1971,18 @@ public class ControleRelatorio {
 
             case "ppcaam" ->
                 "PPCAAM";
+
+            case "tamanhoCamiseta" ->
+                "Tamanho da camiseta";
+
+            case "tamanhoBermudaCalca" ->
+                "Tamanho da bermuda/calça";
+
+            case "tamanhoCalcado" ->
+                "Tamanho do calçado";
+
+            case "tamanhoRoupaIntima" ->
+                "Tamanho da roupa íntima";
 
             case "medicamento" ->
                 "Medicamento";
@@ -2164,7 +2060,7 @@ public class ControleRelatorio {
                 "Responsável";
 
             case "funcionarioCadastro" ->
-                "Funcionário";
+                "Funcionário responsável";
 
             case "telefone" ->
                 "Telefone";
@@ -2225,7 +2121,6 @@ public class ControleRelatorio {
         };
     }
 
-
     // ============================================================
     // TÍTULO
     // ============================================================
@@ -2273,7 +2168,6 @@ public class ControleRelatorio {
         };
     }
 
-
     // ============================================================
     // CLASSES AUXILIARES
     // ============================================================
@@ -2298,12 +2192,10 @@ public class ControleRelatorio {
         }
     }
 
-
     private record ResultadoSQL(
             List<Map<String, Object>> registros,
             List<String> campos) {
     }
-
 
     // ============================================================
     // UTILITÁRIOS
@@ -2320,7 +2212,6 @@ public class ControleRelatorio {
 
         return new HashMap<>();
     }
-
 
     private List<String> listaStrings(
             Object valor) {
@@ -2344,7 +2235,6 @@ public class ControleRelatorio {
         return resultado;
     }
 
-
     private String string(
             Object valor) {
 
@@ -2355,7 +2245,6 @@ public class ControleRelatorio {
         return valor.toString();
     }
 
-
     private String escaparXml(
             String texto) {
 
@@ -2364,10 +2253,25 @@ public class ControleRelatorio {
         }
 
         return texto
-                .replace("&", "&amp;")
-                .replace("<", "&lt;")
-                .replace(">", "&gt;")
-                .replace("\"", "&quot;")
-                .replace("'", "&apos;");
+                .replace(
+                    "&",
+                    "&amp;"
+                )
+                .replace(
+                    "<",
+                    "&lt;"
+                )
+                .replace(
+                    ">",
+                    "&gt;"
+                )
+                .replace(
+                    "\"",
+                    "&quot;"
+                )
+                .replace(
+                    "'",
+                    "&apos;"
+                );
     }
 }
