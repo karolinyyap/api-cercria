@@ -1,10 +1,11 @@
 package br.com.gestaocercria.api.controle;
-import net.sf.jasperreports.engine.JasperCompileManager;
+
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.data.JRMapCollectionDataSource;
+import net.sf.jasperreports.engine.util.JRLoader;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -29,72 +30,102 @@ public class ControleRelatorio {
     }
 
     @PostMapping("/gerar")
-    public ResponseEntity<byte[]> gerarRelatorio(
-            @RequestBody Map<String, String> dados) {
+public ResponseEntity<byte[]> gerarRelatorio(
+        @RequestBody Map<String, String> dados) {
 
-        try {
+    try {
 
-            String sql = """
-                SELECT
-                    nome,
-                    cpf,
-                    escola,
-                    data_entrada
-                FROM acolhido
-                WHERE excluido = false
-                ORDER BY nome
-                """;
+        String tipo = dados.get("tipo");
 
-            List<Map<String, Object>> resultado =
-                    jdbcTemplate.queryForList(sql);
+        if (tipo == null || tipo.isBlank()) {
+            return ResponseEntity.badRequest().build();
+        }
 
-            List<Map<String, ?>> dadosJasper =
-                    new ArrayList<>(resultado);
+        // Por enquanto vamos testar somente acolhidos
+        if (!tipo.equals("acolhidos")) {
+            return ResponseEntity.badRequest().build();
+        }
 
-            JRMapCollectionDataSource dataSource =
-                    new JRMapCollectionDataSource(dadosJasper);
+        // SQL fixo
+        String sql = """
+            SELECT
+                a.nome,
+                a.cpf,
+                a.data_nascimento,
+                a.escola,
+                a.local_familiar,
+                a.numero_processo,
+                a.vara,
+                a.data_entrada,
+                a.data_saida,
+                a.cor_pele,
+                a.deficiencia,
+                a.ppcaam
+            FROM acolhido a
+            WHERE a.excluido = false
+            ORDER BY a.nome
+            """;
 
-            InputStream jrxml =
-                    getClass()
+        // Executa o SQL
+        List<Map<String, Object>> resultado =
+                jdbcTemplate.queryForList(sql);
+
+        // Converte para o formato aceito pelo Jasper
+        List<Map<String, ?>> dadosJasper =
+                new ArrayList<>(resultado);
+
+        JRMapCollectionDataSource dataSource =
+                new JRMapCollectionDataSource(dadosJasper);
+
+        // Localiza o arquivo .jasper
+        InputStream jasperInputStream =
+                getClass()
                     .getClassLoader()
                     .getResourceAsStream(
-                        "relatorios/acolhidos.jrxml"
+                        "relatorios/acolhidos.jasper"
                     );
 
-            if (jrxml == null) {
-                throw new RuntimeException(
-                    "acolhidos.jrxml não encontrado"
-                );
-            }
-
-            JasperReport report =
-                    JasperCompileManager.compileReport(jrxml);
-
-            JasperPrint print =
-                    JasperFillManager.fillReport(
-                        report,
-                        Map.of(),
-                        dataSource
-                    );
-
-            byte[] pdf =
-                    JasperExportManager.exportReportToPdf(print);
-
-            return ResponseEntity.ok()
-                    .header(
-                        HttpHeaders.CONTENT_DISPOSITION,
-                        "inline; filename=acolhidos.pdf"
-                    )
-                    .contentType(MediaType.APPLICATION_PDF)
-                    .body(pdf);
-
-        } catch (Exception e) {
-
-            e.printStackTrace();
-
-            return ResponseEntity
-                    .internalServerError()
-                    .build();
+        if (jasperInputStream == null) {
+            throw new RuntimeException(
+                "Arquivo acolhidos.jasper não encontrado."
+            );
         }
+
+        // Carrega o relatório já compilado
+        JasperReport report =
+                (JasperReport) JRLoader.loadObject(
+                    jasperInputStream
+                );
+
+        // Preenche o relatório com os dados do banco
+        JasperPrint print =
+                JasperFillManager.fillReport(
+                    report,
+                    Map.of(),
+                    dataSource
+                );
+
+        // Gera o PDF
+        byte[] pdf =
+                JasperExportManager.exportReportToPdf(print);
+
+        return ResponseEntity.ok()
+                .header(
+                    HttpHeaders.CONTENT_DISPOSITION,
+                    "inline; filename=relatorio-acolhidos.pdf"
+                )
+                .contentType(
+                    MediaType.APPLICATION_PDF
+                )
+                .body(pdf);
+
+    } catch (Exception e) {
+
+        e.printStackTrace();
+
+        return ResponseEntity
+                .internalServerError()
+                .build();
     }
+}
 }
