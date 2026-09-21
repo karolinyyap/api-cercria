@@ -166,6 +166,22 @@ public class ControleRelatorio {
                     nomeArquivo = "relatorio-patrimonio.pdf";
 
                     break;
+                
+                case "medicamentos":
+                    sql = """
+                        SELECT
+                            m.nome,
+                            m.categoria,
+                            m.unidade_medida
+                        FROM medicamento m
+                        WHERE m.excluido = false
+                        ORDER BY m.nome
+                        """;
+
+                    arquivoJasper = "relatorios/medicamento.jasper";
+                    nomeArquivo = "relatorio-medicamento.pdf";
+
+                    break;
 
                 default:
 
