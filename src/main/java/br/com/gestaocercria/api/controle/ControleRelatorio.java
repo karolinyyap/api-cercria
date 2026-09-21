@@ -101,7 +101,6 @@ public class ControleRelatorio {
                             e.data,
                             e.hora,
                             e.descricao,
-                            e.status,
 
                             (
                                 SELECT STRING_AGG(
@@ -132,6 +131,39 @@ public class ControleRelatorio {
 
                     arquivoJasper = "relatorios/evento.jasper";
                     nomeArquivo = "relatorio-evento.pdf";
+
+                    break;
+
+                case "produto":
+                    sql = """
+                        SELECT
+                            p.nome,
+                            p.categoria,
+                            p.unidade_medida
+                        FROM produto p
+                        WHERE p.excluido = false
+                        ORDER BY p.nome
+                        """;
+
+                    arquivoJasper = "relatorios/produto.jasper";
+                    nomeArquivo = "relatorio-produto.pdf";
+
+                    break;
+
+                case "patrimonio":
+
+                    sql = """
+                        SELECT
+                            p.tombamento,
+                            p.especificacao,
+                            p.dt_aquisicao
+                        FROM patrimonio p
+                        WHERE p.excluido = false
+                        ORDER BY p.tombamento
+                        """;
+
+                    arquivoJasper = "relatorios/patrimonio.jasper";
+                    nomeArquivo = "relatorio-patrimonio.pdf";
 
                     break;
 
