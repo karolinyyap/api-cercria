@@ -94,6 +94,46 @@ public class ControleRelatorio {
                     nomeArquivo = "relatorio-funcionarios.pdf";
 
                     break;
+                case "evento":
+                    sql = """
+                        SELECT
+                            e.nome,
+                            e.data,
+                            e.hora,
+                            e.descricao,
+                            e.status,
+
+                            (
+                                SELECT STRING_AGG(
+                                    a.nome,
+                                    ', '
+                                    ORDER BY a.nome
+                                )
+                                FROM acolhido a
+                                WHERE a.id = ANY(e.acolhidos)
+                            ) AS acolhidos,
+
+                            (
+                                SELECT STRING_AGG(
+                                    f.nome,
+                                    ', '
+                                    ORDER BY f.nome
+                                )
+                                FROM funcionario f
+                                WHERE f.id = ANY(e.responsaveis)
+                            ) AS responsaveis
+
+                        FROM evento e
+
+                        WHERE e.excluido = false
+
+                        ORDER BY e.data, e.hora, e.nome
+                        """;
+
+                    arquivoJasper = "relatorios/eventos.jasper";
+                    nomeArquivo = "relatorio-eventos.pdf";
+
+                    break;
 
                 default:
 
