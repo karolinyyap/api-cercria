@@ -130,8 +130,8 @@ public class ControleRelatorio {
                         ORDER BY e.data, e.hora, e.nome
                         """;
 
-                    arquivoJasper = "relatorios/eventos.jasper";
-                    nomeArquivo = "relatorio-eventos.pdf";
+                    arquivoJasper = "relatorios/evento.jasper";
+                    nomeArquivo = "relatorio-evento.pdf";
 
                     break;
 
