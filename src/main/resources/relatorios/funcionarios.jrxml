@@ -1,0 +1,213 @@
+<!-- Created with Jaspersoft Studio version 7.0.8.final using JasperReports Library version 7.0.8-6f896111  -->
+<jasperReport name="Blank_A4" language="java" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="c011424b-c400-4709-9c26-84f95fdfdfc3">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="New Data Adapter"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<query language="sql"><![CDATA[select * from funcionario]]></query>
+	<field name="id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="id"/>
+		<property name="com.jaspersoft.studio.field.label" value="id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="funcionario"/>
+	</field>
+	<field name="carga_horaria" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="carga_horaria"/>
+		<property name="com.jaspersoft.studio.field.label" value="carga_horaria"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="funcionario"/>
+	</field>
+	<field name="cargo" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="cargo"/>
+		<property name="com.jaspersoft.studio.field.label" value="cargo"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="funcionario"/>
+	</field>
+	<field name="cpf" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="cpf"/>
+		<property name="com.jaspersoft.studio.field.label" value="cpf"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="funcionario"/>
+	</field>
+	<field name="data_admissao" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.name" value="data_admissao"/>
+		<property name="com.jaspersoft.studio.field.label" value="data_admissao"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="funcionario"/>
+	</field>
+	<field name="data_nascimento" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.name" value="data_nascimento"/>
+		<property name="com.jaspersoft.studio.field.label" value="data_nascimento"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="funcionario"/>
+	</field>
+	<field name="data_saida" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.name" value="data_saida"/>
+		<property name="com.jaspersoft.studio.field.label" value="data_saida"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="funcionario"/>
+	</field>
+	<field name="email" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="email"/>
+		<property name="com.jaspersoft.studio.field.label" value="email"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="funcionario"/>
+	</field>
+	<field name="escolaridade" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="escolaridade"/>
+		<property name="com.jaspersoft.studio.field.label" value="escolaridade"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="funcionario"/>
+	</field>
+	<field name="nome" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="nome"/>
+		<property name="com.jaspersoft.studio.field.label" value="nome"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="funcionario"/>
+	</field>
+	<field name="orgao_emissor" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="orgao_emissor"/>
+		<property name="com.jaspersoft.studio.field.label" value="orgao_emissor"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="funcionario"/>
+	</field>
+	<field name="rg" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="rg"/>
+		<property name="com.jaspersoft.studio.field.label" value="rg"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="funcionario"/>
+	</field>
+	<field name="senha" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="senha"/>
+		<property name="com.jaspersoft.studio.field.label" value="senha"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="funcionario"/>
+	</field>
+	<field name="sexo" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="sexo"/>
+		<property name="com.jaspersoft.studio.field.label" value="sexo"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="funcionario"/>
+	</field>
+	<field name="uf" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="uf"/>
+		<property name="com.jaspersoft.studio.field.label" value="uf"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="funcionario"/>
+	</field>
+	<field name="telefone" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="telefone"/>
+		<property name="com.jaspersoft.studio.field.label" value="telefone"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="funcionario"/>
+	</field>
+	<field name="excluido" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.name" value="excluido"/>
+		<property name="com.jaspersoft.studio.field.label" value="excluido"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="funcionario"/>
+	</field>
+	<field name="senha_temporaria" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.name" value="senha_temporaria"/>
+		<property name="com.jaspersoft.studio.field.label" value="senha_temporaria"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="funcionario"/>
+	</field>
+	<background splitType="Stretch"/>
+	<title height="89" splitType="Stretch">
+		<element kind="staticText" uuid="3e04f939-a47c-4d60-9656-fcc77c7ccb33" x="120" y="20" width="120" height="30" fontName="SansSerif" fontSize="22.0" bold="true">
+			<paragraph lineSpacingSize="1.0"/>
+			<text><![CDATA[CERCRIA]]></text>
+		</element>
+		<element kind="staticText" uuid="80ba2757-bd74-4521-9ee8-0ad6ef35c69f" x="120" y="50" width="100" height="20" forecolor="#595959">
+			<text><![CDATA[Sistema de Gestão]]></text>
+		</element>
+		<element kind="line" uuid="701497e1-5f4e-4e0f-bd24-6e3cf3b16021" x="280" y="10" width="1" height="64"/>
+		<element kind="staticText" uuid="16141706-ff0b-4afd-954b-6cede8041fe1" x="330" y="30" width="180" height="30" fontName="SansSerif" bold="true" hTextAlign="Center">
+			<text><![CDATA[Centro de Referência da Criança e do Adolescente]]></text>
+		</element>
+		<element kind="line" uuid="85de097d-079c-42b4-a501-22596bff3410" x="2" y="88" width="550" height="1"/>
+	</title>
+	<pageHeader height="44" splitType="Stretch">
+		<element kind="line" uuid="8c818a56-6137-49e5-86d1-c4056501449b" x="2" y="40" width="550" height="1"/>
+		<element kind="staticText" uuid="859f6d3f-8e35-45c7-b404-c5b2d11a4fbf" x="120" y="7" width="355" height="30" forecolor="#030303" fontName="SansSerif" fontSize="22.0" bold="true" vTextAlign="Middle">
+			<text><![CDATA[RELATÓRIO DE FUNCIONÁRIOS]]></text>
+		</element>
+	</pageHeader>
+	<columnHeader splitType="Stretch"/>
+	<detail>
+		<band height="190" splitType="Stretch">
+			<element kind="rectangle" uuid="6064edda-0e1c-467b-bc15-6cf276b478e6" x="10" y="10" width="534" height="160"/>
+			<element kind="rectangle" uuid="bb81e6c8-c9e3-44bb-945c-fe1ed4518681" x="10" y="10" width="534" height="30" forecolor="#C4C4C4" backcolor="#C4C4C4" mode="Opaque"/>
+			<element kind="line" uuid="d1389f69-b3cb-4130-b4a9-025beebac88e" x="270" y="50" width="1" height="90"/>
+			<element kind="textField" uuid="c4009e9d-7e7c-411b-b917-9ded247369cb" x="30" y="10" width="500" height="30" fontSize="13.0" vTextAlign="Middle">
+				<expression><![CDATA[$F{nome}]]></expression>
+			</element>
+			<element kind="textField" uuid="e6ac6a25-66f0-4e30-ad33-2eb1fc9d6cd4" x="60" y="70" width="100" height="20" vTextAlign="Middle">
+				<expression><![CDATA[$F{email}]]></expression>
+			</element>
+			<element kind="staticText" uuid="74d32547-e30c-4e92-89d5-9c45570e754b" x="30" y="70" width="30" height="20" vTextAlign="Middle">
+				<text><![CDATA[Email:]]></text>
+			</element>
+			<element kind="textField" uuid="3291526f-3647-4f26-af31-14fbd122ebd5" x="130" y="130" width="100" height="20" vTextAlign="Middle">
+				<expression><![CDATA[$F{data_admissao}]]></expression>
+			</element>
+			<element kind="staticText" uuid="d2884524-1f42-4cff-ac78-3e4b03036b9e" x="30" y="130" width="100" height="20" vTextAlign="Middle">
+				<text><![CDATA[Data de admissão:]]></text>
+			</element>
+			<element kind="textField" uuid="2e1a30a6-08c9-4fb0-894c-6222a329cf2b" x="130" y="90" width="100" height="20" vTextAlign="Middle">
+				<expression><![CDATA[$F{data_nascimento}]]></expression>
+			</element>
+			<element kind="staticText" uuid="31723f07-74a9-4afa-9666-c9afa2ddaa80" x="30" y="90" width="100" height="20" vTextAlign="Middle">
+				<text><![CDATA[Data de nascimento:]]></text>
+			</element>
+			<element kind="textField" uuid="396bc3af-ae7a-4ad8-b787-acc5e9881f1a" x="381" y="130" width="100" height="20" blankWhenNull="true" vTextAlign="Middle">
+				<expression><![CDATA[$F{data_saida}]]></expression>
+			</element>
+			<element kind="staticText" uuid="aed89d95-a0e4-41ce-b5a5-e7fa9aac4917" x="281" y="130" width="100" height="20" vTextAlign="Middle">
+				<text><![CDATA[Data de saída:]]></text>
+			</element>
+			<element kind="textField" uuid="d8186f2f-6fcf-4929-8709-0a8252ddaa56" x="381" y="50" width="100" height="20" vTextAlign="Middle">
+				<expression><![CDATA[$F{escolaridade}]]></expression>
+			</element>
+			<element kind="staticText" uuid="ecfb2d3e-3adb-462b-accb-d84e774f39b7" x="281" y="50" width="100" height="20" vTextAlign="Middle">
+				<text><![CDATA[Escolaridade:]]></text>
+			</element>
+			<element kind="textField" uuid="fa66fbc6-484b-4624-ac57-347d53b1a998" x="110" y="110" width="40" height="20">
+				<expression><![CDATA[$F{orgao_emissor}]]></expression>
+			</element>
+			<element kind="textField" uuid="b6dfc54a-2991-4bf4-8ab6-1f4385d35c2f" x="50" y="110" width="60" height="20" vTextAlign="Middle">
+				<expression><![CDATA[$F{rg}]]></expression>
+			</element>
+			<element kind="staticText" uuid="6b66113a-f85f-4551-82bb-327d1d8b1207" x="30" y="110" width="20" height="20" vTextAlign="Middle">
+				<text><![CDATA[RG:]]></text>
+			</element>
+			<element kind="textField" uuid="19751bf3-fc65-49de-bec4-7a1a190ca6c3" x="150" y="110" width="30" height="20">
+				<expression><![CDATA[$F{uf}]]></expression>
+			</element>
+			<element kind="textField" uuid="4d43a3a3-2c48-4ac8-8643-c6a52b6f86de" x="381" y="70" width="100" height="20" pattern="(##) #####-####" vTextAlign="Middle">
+				<expression><![CDATA[$F{telefone}]]></expression>
+			</element>
+			<element kind="staticText" uuid="d1be32e8-8177-40e8-ba1e-ea9a99aa2c86" x="281" y="70" width="100" height="20" vTextAlign="Middle">
+				<text><![CDATA[Telefone: ]]></text>
+			</element>
+			<element kind="textField" uuid="3386d554-73de-436b-9e06-766899668c33" x="60" y="50" width="100" height="20" pattern="###.###.###-##" vTextAlign="Middle">
+				<expression><![CDATA[$F{cpf}]]></expression>
+			</element>
+			<element kind="staticText" uuid="ef91912a-267e-4f73-9d94-5cd6559e9a16" x="30" y="50" width="30" height="20" vTextAlign="Middle">
+				<text><![CDATA[CPF:]]></text>
+			</element>
+			<element kind="textField" uuid="86ce5033-213a-4f6e-a9c3-dde7730525fb" x="309" y="110" width="70" height="20" vTextAlign="Middle">
+				<expression><![CDATA[$F{sexo}]]></expression>
+			</element>
+			<element kind="staticText" uuid="be38a65c-a2c1-4ff0-ac00-78e40f78bfe5" x="281" y="110" width="28" height="20" vTextAlign="Middle">
+				<text><![CDATA[Sexo:]]></text>
+			</element>
+			<element kind="textField" uuid="d0b2c530-935c-415c-97aa-d796750c4bdf" x="321" y="90" width="94" height="20" vTextAlign="Middle">
+				<expression><![CDATA[$F{cargo}]]></expression>
+			</element>
+			<element kind="staticText" uuid="c16b8c67-147d-4041-957e-227271a820ae" x="281" y="90" width="40" height="20" vTextAlign="Middle">
+				<text><![CDATA[Cargo:]]></text>
+			</element>
+			<element kind="textField" uuid="7ad0ca74-7ab5-4944-9e9d-40029a64e68e" x="439" y="90" width="42" height="20">
+				<expression><![CDATA[$F{carga_horaria}]]></expression>
+			</element>
+			<element kind="staticText" uuid="94d7f59d-223e-4ba8-a140-308ba0fbe530" x="415" y="90" width="24" height="20">
+				<text><![CDATA[CH:]]></text>
+			</element>
+		</band>
+	</detail>
+	<columnFooter splitType="Stretch"/>
+	<pageFooter height="31" splitType="Stretch">
+		<element kind="textField" uuid="5253a67b-32c5-41f0-a0c5-cfde53cb9dba" x="520" y="0" width="39" height="30">
+			<expression><![CDATA[$V{PAGE_NUMBER}]]></expression>
+		</element>
+		<element kind="textField" uuid="3c2f9c2b-9111-4758-af9f-7de4687d8410" x="0" y="0" width="100" height="30" pattern="dd/MM/yyyy">
+			<expression><![CDATA[new java.util.Date()]]></expression>
+		</element>
+		<element kind="textField" uuid="7428efad-5049-4993-810a-f5840af271bc" x="100" y="0" width="100" height="30" pattern="HH:mm">
+			<expression><![CDATA[new java.util.Date()]]></expression>
+		</element>
+	</pageFooter>
+	<summary height="3" splitType="Stretch"/>
+</jasperReport>
