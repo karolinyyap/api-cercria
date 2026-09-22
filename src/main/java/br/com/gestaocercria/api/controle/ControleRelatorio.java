@@ -167,7 +167,7 @@ public class ControleRelatorio {
 
                     break;
                 
-                case "medicamentos":
+                case "medicamento":
                     sql = """
                         SELECT
                             m.nome,
