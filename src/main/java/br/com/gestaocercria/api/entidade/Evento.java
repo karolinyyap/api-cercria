@@ -21,7 +21,6 @@ public class Evento {
     private LocalDate data;
     private LocalTime hora;
     private String descricao;
-    private String status;
     private Boolean excluido = false;
 
     private List<Integer> responsaveis;
