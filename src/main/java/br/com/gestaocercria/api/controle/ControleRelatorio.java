@@ -56,9 +56,9 @@ public class ControleRelatorio {
                             a.data_saida,
                             a.cor_pele,
                             a.deficiencia,
-                            a.ppcaam
+                            a.ppcaam,
+                            a.alergias
                         FROM acolhido a
-                        WHERE a.excluido = false
                         ORDER BY a.nome
                         """;
 
@@ -84,9 +84,11 @@ public class ControleRelatorio {
                             f.carga_horaria,
                             f.sexo,
                             f.data_admissao,
-                            f.data_saida
+                            f.data_saida,
+                            f.turno,
+                            f.tipoContrato,
+                            f.dataFimContrato
                         FROM funcionario f
-                        WHERE f.excluido = false
                         ORDER BY f.nome
                         """;
 
@@ -123,9 +125,6 @@ public class ControleRelatorio {
                             ) AS responsaveis
 
                         FROM evento e
-
-                        WHERE e.excluido = false
-
                         ORDER BY e.data, e.hora, e.nome
                         """;
 
@@ -174,7 +173,6 @@ public class ControleRelatorio {
                             m.categoria,
                             m.unidade_medida
                         FROM medicamento m
-                        WHERE m.excluido = false
                         ORDER BY m.nome
                         """;
 

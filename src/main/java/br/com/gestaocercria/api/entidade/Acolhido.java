@@ -27,6 +27,7 @@ public class Acolhido {
     private String corPele;
     private Date dataSaida;
     private String deficiencia;
+    private String alergias;
     private String ppcaam;
     private String tamanhoCamiseta;
     private String tamanhoBermudaCalca;

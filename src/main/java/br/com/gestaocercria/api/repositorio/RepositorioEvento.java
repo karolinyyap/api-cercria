@@ -1,5 +1,6 @@
 package br.com.gestaocercria.api.repositorio;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.data.repository.CrudRepository;
@@ -11,5 +12,10 @@ public interface RepositorioEvento extends CrudRepository<Evento, Integer>  {
     @NonNull
     List<Evento> findAll();
     List<Evento> findByExcluidoFalse();
+
+    List<Evento> findByExcluidoFalseAndDataBetween(
+        LocalDate inicio,
+        LocalDate fim
+    );
 
 }

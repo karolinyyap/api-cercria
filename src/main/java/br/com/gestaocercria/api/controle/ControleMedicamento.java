@@ -23,7 +23,7 @@ public class ControleMedicamento {
 
     @GetMapping("/listagem")
     public Iterable<Medicamento> selecionar() {
-        return acao.findByExcluidoFalse();
+        return acao.findByExcluidoFalseOrderByNomeAsc();
     }
 
     @GetMapping("/{id}")            

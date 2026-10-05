@@ -9,5 +9,8 @@ public interface RepositorioAgendaMedicamento extends CrudRepository<AgendaMedic
 
     List<AgendaMedicamento> findByAcolhidoId(Integer id);
 
-    
+    List<AgendaMedicamento> findByDataAndStatus(
+        String data,
+        String status
+    );
 }

@@ -6,6 +6,6 @@ import org.springframework.data.repository.CrudRepository;
 import br.com.gestaocercria.api.entidade.Produto;
 
 public interface RepositorioProduto extends CrudRepository<Produto, Integer>{
-    List<Produto> findByExcluidoFalse();
+    List<Produto> findByExcluidoFalseOrderByNomeAsc();
 
 }

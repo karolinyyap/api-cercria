@@ -36,6 +36,9 @@ public class Funcionario {
     private String sexo;
     private Date dataAdmissao;
     private Date dataSaida;
+    private String turno;
+    private String tipoContrato;
+    private Date dataFimContrato;
     private String senha;
     private Boolean excluido = false;
 

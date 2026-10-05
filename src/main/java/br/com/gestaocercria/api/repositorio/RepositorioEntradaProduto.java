@@ -12,4 +12,8 @@ public interface RepositorioEntradaProduto extends CrudRepository<EntradaProduto
         Double quantidadeAtual);
 
     List<EntradaProduto> findByProdutoId(Integer produtoId);
+
+    List<EntradaProduto> findByDataValidadeIsNotNullAndDataValidadeNot(
+    String dataValidade
+);
 }

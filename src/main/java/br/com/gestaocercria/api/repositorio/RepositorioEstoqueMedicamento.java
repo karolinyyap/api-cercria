@@ -8,5 +8,15 @@ import br.com.gestaocercria.api.entidade.EstoqueMedicamento;
 public interface RepositorioEstoqueMedicamento extends CrudRepository<EstoqueMedicamento, Integer> {
     List<EstoqueMedicamento> findByMedicamentoId(Integer medicamentoId);
 
-    EstoqueMedicamento findTopByMedicamentoIdOrderByDataEntradaDesc (Integer id);
+    EstoqueMedicamento findTopByMedicamentoIdOrderByDataEntradaDesc(
+        Integer id
+    );
+
+    List<EstoqueMedicamento> findByQuantidade_atualLessThanEqual(
+        Double quantidade
+    );
+
+    List<EstoqueMedicamento> findByDataValidadeIsNotNullAndDataValidadeNot(
+    String dataValidade
+);
 }

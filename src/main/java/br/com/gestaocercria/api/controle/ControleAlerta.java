@@ -18,7 +18,12 @@ public class ControleAlerta {
     private final RepositorioAgendaMedicamento agendaRepo;
     private final RepositorioEntradaProduto estoqueProdutoRepo;
 
-    public ControleAlerta(RepositorioEvento eventoRepo, RepositorioEstoqueMedicamento estoqueRepo, RepositorioAgendaMedicamento agendaRepo, RepositorioEntradaProduto estoqueProdutoRepo) {
+    public ControleAlerta(
+            RepositorioEvento eventoRepo,
+            RepositorioEstoqueMedicamento estoqueRepo,
+            RepositorioAgendaMedicamento agendaRepo,
+            RepositorioEntradaProduto estoqueProdutoRepo) {
+
         this.eventoRepo = eventoRepo;
         this.estoqueRepo = estoqueRepo;
         this.agendaRepo = agendaRepo;
@@ -27,84 +32,206 @@ public class ControleAlerta {
 
     @GetMapping("/listagem")
     public List<Map<String, String>> listarAlertas() {
+
         List<Map<String, String>> alertas = new ArrayList<>();
+
         LocalDate hoje = LocalDate.now();
+        LocalDate limiteValidade = hoje.plusDays(30);
 
-        // EVENTOS DOS PRÓXIMOS 3 DIAS
-        List<Evento> eventos = (List<Evento>) eventoRepo.findAll();
+        DateTimeFormatter formato =
+                DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-        eventos.stream().filter(e ->!e.getData().isBefore(hoje) && !e.getData().isAfter(hoje.plusDays(3)))
-            .forEach(e -> {
-                Map<String, String> alerta = new HashMap<>();
-                alerta.put("tipo", "Evento");
-                alerta.put("mensagem", "O evento " + e.getNome() + " acontecerá em " + e.getData().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-                alertas.add(alerta);
-            });
+        // ============================================================
+        // EVENTOS DOS PRÓXIMOS 7 DIAS
+        // ============================================================
 
+        List<Evento> eventos =
+                eventoRepo.findByExcluidoFalseAndDataBetween(
+                        hoje,
+                        hoje.plusDays(7)
+                );
+
+        for (Evento e : eventos) {
+
+            if (e.getData() == null) {
+                continue;
+            }
+
+            Map<String, String> alerta = new HashMap<>();
+
+            alerta.put("tipo", "Evento");
+
+            alerta.put(
+                "mensagem",
+                "O evento "
+                + e.getNome()
+                + " acontecerá em "
+                + e.getData().format(formato)
+            );
+
+            alertas.add(alerta);
+        }
+
+        // ============================================================
         // ESTOQUE BAIXO
-        List<EstoqueMedicamento> estoques =
-            (List<EstoqueMedicamento>) estoqueRepo.findAll();
+        // ============================================================
 
-        estoques.stream()
-            .filter(e -> e.getQuantidade_atual() <= 10)
-            .forEach(e -> {
+        List<EstoqueMedicamento> estoquesBaixos =
+                estoqueRepo.findByQuantidade_atualLessThanEqual(10.0);
 
-                Map<String, String> alerta = new HashMap<>();
+        for (EstoqueMedicamento e : estoquesBaixos) {
 
-                alerta.put("tipo", "Estoque Baixo");
+            if (e.getMedicamento() == null) {
+                continue;
+            }
 
-                alerta.put("mensagem", "O medicamento " + e.getMedicamento().getNome()
-                    + " possui apenas " + e.getQuantidade_atual() + " unidades em estoque.");
+            Map<String, String> alerta = new HashMap<>();
 
-                alertas.add(alerta);
-            });
+            alerta.put("tipo", "Estoque Baixo");
 
+            alerta.put(
+                "mensagem",
+                "O medicamento "
+                + e.getMedicamento().getNome()
+                + " possui apenas "
+                + e.getQuantidade_atual()
+                + " unidades em estoque."
+            );
+
+            alertas.add(alerta);
+        }
+
+        // ============================================================
         // MEDICAMENTOS PENDENTES DE HOJE
-        String hojeTexto = LocalDate.now().toString();
+        // ============================================================
 
-        List<AgendaMedicamento> agendas = (List<AgendaMedicamento>) agendaRepo.findAll();
+        List<AgendaMedicamento> agendas =
+                agendaRepo.findByDataAndStatus(
+                        hoje.toString(),
+                        "PENDENTE"
+                );
 
-        agendas.stream().filter(a -> hojeTexto.equals(a.getData()) && "PENDENTE".equals(a.getStatus()))
-            .forEach(a -> {
-                Map<String, String> alerta = new HashMap<>();
-                alerta.put("tipo", "Medicamento");
-                alerta.put("mensagem", a.getAcolhido().getNome() + " deve tomar "
-                    + a.getMedicamento().getNome() + " às " + a.getHorario().substring(0, 5));
+        for (AgendaMedicamento a : agendas) {
 
-                alertas.add(alerta);
-            });
-        
-        estoques.stream().filter(e -> e.getDataValidade() != null && !e.getDataValidade().isBlank())
-            .forEach(e -> {
-                LocalDate validade = LocalDate.parse(e.getDataValidade());
+            if (a.getAcolhido() == null ||
+                a.getMedicamento() == null) {
+                continue;
+            }
 
-                if (!validade.isBefore(hoje) && !validade.isAfter(hoje.plusDays(30))) {
+            Map<String, String> alerta = new HashMap<>();
 
-                    Map<String, String> alerta = new HashMap<>();
+            alerta.put("tipo", "Medicamento");
+
+            String horario = a.getHorario();
+
+            if (horario != null && horario.length() >= 5) {
+                horario = horario.substring(0, 5);
+            }
+
+            alerta.put(
+                "mensagem",
+                a.getAcolhido().getNome()
+                + " deve tomar "
+                + a.getMedicamento().getNome()
+                + " às "
+                + (horario != null ? horario : "--:--")
+            );
+
+            alertas.add(alerta);
+        }
+
+        // ============================================================
+        // MEDICAMENTOS A VENCER EM ATÉ 30 DIAS
+        // ============================================================
+
+        List<EstoqueMedicamento> estoquesComValidade =
+                estoqueRepo.findByDataValidadeIsNotNullAndDataValidadeNot("");
+
+        for (EstoqueMedicamento e : estoquesComValidade) {
+
+            if (e.getMedicamento() == null) {
+                continue;
+            }
+
+            try {
+
+                LocalDate validade =
+                        LocalDate.parse(e.getDataValidade());
+
+                if (!validade.isBefore(hoje)
+                        && !validade.isAfter(limiteValidade)) {
+
+                    Map<String, String> alerta =
+                            new HashMap<>();
+
                     alerta.put("tipo", "Validade");
 
-                    alerta.put( "mensagem", "O medicamento " + e.getMedicamento().getNome()
-                        + " vence em " + validade.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+                    alerta.put(
+                        "mensagem",
+                        "O medicamento "
+                        + e.getMedicamento().getNome()
+                        + " vence em "
+                        + validade.format(formato)
+                    );
 
                     alertas.add(alerta);
                 }
-            });
 
-        List<EntradaProduto> produtos = (List<EntradaProduto>) estoqueProdutoRepo.findAll();
+            } catch (Exception ex) {
 
-        produtos.stream().filter(p -> p.getDataValidade() != null && !p.getDataValidade().isBlank())
-            .forEach(p -> {
-                LocalDate validade = LocalDate.parse(p.getDataValidade());
+                System.out.println(
+                    "Data de validade de medicamento inválida: "
+                    + e.getDataValidade()
+                );
+            }
+        }
 
-                if (!validade.isBefore(hoje) && !validade.isAfter(hoje.plusDays(30))) {
-                    Map<String, String> alerta = new HashMap<>();
+        // ============================================================
+        // PRODUTOS A VENCER EM ATÉ 30 DIAS
+        // ============================================================
+
+        List<EntradaProduto> produtosComValidade =
+                estoqueProdutoRepo
+                    .findByDataValidadeIsNotNullAndDataValidadeNot("");
+
+        for (EntradaProduto p : produtosComValidade) {
+
+            if (p.getProduto() == null) {
+                continue;
+            }
+
+            try {
+
+                LocalDate validade =
+                        LocalDate.parse(p.getDataValidade());
+
+                if (!validade.isBefore(hoje)
+                        && !validade.isAfter(limiteValidade)) {
+
+                    Map<String, String> alerta =
+                            new HashMap<>();
+
                     alerta.put("tipo", "Validade");
-                    alerta.put("mensagem", "O produto " + p.getProduto().getNome()
-                        + " vence em " + validade.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+
+                    alerta.put(
+                        "mensagem",
+                        "O produto "
+                        + p.getProduto().getNome()
+                        + " vence em "
+                        + validade.format(formato)
+                    );
 
                     alertas.add(alerta);
                 }
-            });
+
+            } catch (Exception ex) {
+
+                System.out.println(
+                    "Data de validade de produto inválida: "
+                    + p.getDataValidade()
+                );
+            }
+        }
 
         return alertas;
     }

@@ -23,7 +23,7 @@ public class ControleAcolhido {
 
     @GetMapping("/listagem")
     public Iterable<Acolhido> selecionar() {
-        return acao.findByExcluidoFalse();
+        return acao.findByExcluidoFalseOrderByNomeAsc();
     }
 
     @GetMapping("/{id}")            

@@ -47,7 +47,7 @@ public class ControleFuncionario {
 
     @GetMapping("/listagem")
     public Iterable<Funcionario> selecionar() {
-        return acao.findByExcluidoFalse();
+        return acao.findByExcluidoFalseOrderByNomeAsc();
     }
 
     @GetMapping("/{id}")            

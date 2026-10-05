@@ -7,6 +7,6 @@ import br.com.gestaocercria.api.entidade.Funcionario;
 
 public interface RepositorioFuncionario extends CrudRepository<Funcionario, Integer> {
     Funcionario findByEmail(String email);
-    List<Funcionario> findByExcluidoFalse();
-
+    List<Funcionario> findByExcluidoFalseOrderByNomeAsc();
+    
 }

@@ -23,7 +23,7 @@ public class ControleProduto {
 
     @GetMapping("/listagem")
     public Iterable<Produto> selecionar() {
-        return acao.findByExcluidoFalse();
+        return acao.findByExcluidoFalseOrderByNomeAsc();
     }
 
     @GetMapping("/{id}")            
