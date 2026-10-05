@@ -28,10 +28,10 @@ public class ControleEstoqueMedicamento {
 
         if (!entradas.isEmpty()) {
             EstoqueMedicamento ultima = entradas.get(entradas.size() - 1);
-            estoqueAtual = ultima.getQuantidade_atual();
+            estoqueAtual = ultima.getQuantidadeAtual();
         }
 
-        e.setQuantidade_atual(estoqueAtual + e.getQuantidade());
+        e.setQuantidadeAtual(estoqueAtual + e.getQuantidade());
 
         return acao.save(e);
     }

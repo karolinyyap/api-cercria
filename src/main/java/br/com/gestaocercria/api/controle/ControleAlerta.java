@@ -77,7 +77,7 @@ public class ControleAlerta {
         // ============================================================
 
         List<EstoqueMedicamento> estoquesBaixos =
-                estoqueRepo.findByQuantidade_atualLessThanEqual(10.0);
+                estoqueRepo.findByQuantidadeAtualLessThanEqual(10.0);
 
         for (EstoqueMedicamento e : estoquesBaixos) {
 
@@ -94,7 +94,7 @@ public class ControleAlerta {
                 "O medicamento "
                 + e.getMedicamento().getNome()
                 + " possui apenas "
-                + e.getQuantidade_atual()
+                + e.getQuantidadeAtual()
                 + " unidades em estoque."
             );
 

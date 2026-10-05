@@ -1,6 +1,5 @@
 package br.com.gestaocercria.api.entidade;
 
-
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -13,8 +12,11 @@ public class EstoqueMedicamento {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
     private Double quantidade;
-    private Double quantidade_atual;
+
+    private Double quantidadeAtual;
+
     private String dataValidade;
     private String origem;
     private String dataEntrada;

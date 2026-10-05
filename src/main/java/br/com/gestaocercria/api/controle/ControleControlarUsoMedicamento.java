@@ -45,8 +45,8 @@ public class ControleControlarUsoMedicamento {
 
         double quantidadeDisponivel = 0;
 
-        if (estoque != null && estoque.getQuantidade_atual() != null) {
-            quantidadeDisponivel = estoque.getQuantidade_atual();
+        if (estoque != null && estoque.getQuantidadeAtual() != null) {
+            quantidadeDisponivel = estoque.getQuantidadeAtual();
         }
 
         /*

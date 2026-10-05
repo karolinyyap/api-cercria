@@ -56,11 +56,11 @@ public class ControleAgendaMedicamento {
                         throw new RuntimeException("Medicamento sem estoque");
                 }
 
-                if (estoque.getQuantidade_atual() < agenda.getDose()) {
+                if (estoque.getQuantidadeAtual() < agenda.getDose()) {
                         throw new RuntimeException("Estoque insuficiente");
                 }
 
-                estoque.setQuantidade_atual(estoque.getQuantidade_atual() - agenda.getDose());
+                estoque.setQuantidadeAtual(estoque.getQuantidadeAtual() - agenda.getDose());
 
                 estoqueRepo.save(estoque);
                 agenda.setEstoqueMedicamento(estoque);
@@ -96,11 +96,11 @@ public class ControleAgendaMedicamento {
                         throw new RuntimeException("Medicamento sem estoque");
                 }
 
-                if (estoque.getQuantidade_atual() < agenda.getDose()) {
+                if (estoque.getQuantidadeAtual() < agenda.getDose()) {
                         throw new RuntimeException("Estoque insuficiente");
                 }
 
-                estoque.setQuantidade_atual(estoque.getQuantidade_atual() - agenda.getDose());
+                estoque.setQuantidadeAtual(estoque.getQuantidadeAtual() - agenda.getDose());
 
                 estoqueRepo.save(estoque);
                 agenda.setEstoqueMedicamento(estoque);
@@ -113,6 +113,6 @@ public class ControleAgendaMedicamento {
         @GetMapping("/estoque-baixo")
         public List<EstoqueMedicamento> estoqueBaixo() {
                 List<EstoqueMedicamento> estoques = (List<EstoqueMedicamento>) estoqueRepo.findAll();
-                return estoques.stream().filter(e -> e.getQuantidade_atual() <= 10).toList();
+                return estoques.stream().filter(e -> e.getQuantidadeAtual() <= 10).toList();
         }
 }
