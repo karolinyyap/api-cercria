@@ -18,7 +18,8 @@ public interface RepositorioEstoqueMedicamento extends CrudRepository<EstoqueMed
         Double quantidade
     );
 
-    List<EstoqueMedicamento> findByDataValidadeIsNotNullAndDataValidadeNot(
-        String dataValidade
+    List<EstoqueMedicamento> findByDataValidadeBetween(
+        String inicio,
+        String fim
     );
 }

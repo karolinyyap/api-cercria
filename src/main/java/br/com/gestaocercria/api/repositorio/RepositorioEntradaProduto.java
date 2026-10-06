@@ -13,7 +13,8 @@ public interface RepositorioEntradaProduto extends CrudRepository<EntradaProduto
 
     List<EntradaProduto> findByProdutoId(Integer produtoId);
 
-    List<EntradaProduto> findByDataValidadeIsNotNullAndDataValidadeNot(
-    String dataValidade
-);
+    List<EntradaProduto> findByDataValidadeBetween(
+        String inicio,
+        String fim
+    );
 }

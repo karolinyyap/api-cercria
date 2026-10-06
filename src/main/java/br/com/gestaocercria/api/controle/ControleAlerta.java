@@ -144,8 +144,14 @@ public class ControleAlerta {
         // MEDICAMENTOS A VENCER EM ATÉ 30 DIAS
         // ============================================================
 
+        String hojeString = hoje.toString();
+        String limiteValidadeString = limiteValidade.toString();
+
         List<EstoqueMedicamento> estoquesComValidade =
-                estoqueRepo.findByDataValidadeIsNotNullAndDataValidadeNot("");
+        estoqueRepo.findByDataValidadeBetween(
+                hojeString,
+                limiteValidadeString
+        );
 
         for (EstoqueMedicamento e : estoquesComValidade) {
 
@@ -191,8 +197,10 @@ public class ControleAlerta {
         // ============================================================
 
         List<EntradaProduto> produtosComValidade =
-                estoqueProdutoRepo
-                    .findByDataValidadeIsNotNullAndDataValidadeNot("");
+                estoqueProdutoRepo.findByDataValidadeBetween(
+                        hojeString,
+                        limiteValidadeString
+                );
 
         for (EntradaProduto p : produtosComValidade) {
 
