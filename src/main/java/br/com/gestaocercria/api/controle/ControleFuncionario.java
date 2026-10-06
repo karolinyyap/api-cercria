@@ -185,22 +185,17 @@ public class ControleFuncionario {
                     .body("E-mail não encontrado.");
         }
 
-        // Gera uma senha temporária de 8 números
         SecureRandom random = new SecureRandom();
 
-        String senhaTemporaria = String.format(
-                "%08d",
-                random.nextInt(100_000_000)
-        );
+        String senhaTemporaria =
+                String.format("%08d", random.nextInt(100_000_000));
 
-        // Salva a senha criptografada
         funcionario.setSenha(
                 encoder.encode(senhaTemporaria)
         );
 
         acao.save(funcionario);
 
-        // Envia a senha para o e-mail
         emailService.enviarSenhaTemporaria(
                 funcionario.getEmail(),
                 funcionario.getNome(),
@@ -209,8 +204,8 @@ public class ControleFuncionario {
 
         return ResponseEntity.ok(
                 Map.of(
-                        "mensagem",
-                        "Uma senha temporária foi enviada para o e-mail cadastrado."
+                    "mensagem",
+                    "Uma senha temporária foi enviada para o e-mail cadastrado."
                 )
         );
     }
