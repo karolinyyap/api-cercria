@@ -1,5 +1,6 @@
 package br.com.gestaocercria.api.controle;
 
+import java.security.SecureRandom;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,21 +12,25 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import br.com.gestaocercria.api.entidade.Funcionario;
 import br.com.gestaocercria.api.repositorio.RepositorioFuncionario;
 import br.com.gestaocercria.api.securityConfig.JwtService;
+import br.com.gestaocercria.api.service.EmailService;
 
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/funcionario")
 public class ControleFuncionario {
+    private final EmailService emailService;
+
     private final RepositorioFuncionario acao;
 
     private final BCryptPasswordEncoder encoder;
     private final JwtService jwtService;
 
-    ControleFuncionario(RepositorioFuncionario acao, BCryptPasswordEncoder encoder, JwtService jwtService) {
+    ControleFuncionario(RepositorioFuncionario acao, BCryptPasswordEncoder encoder, JwtService jwtService, EmailService emailService) {
         this.acao = acao;
         this.encoder = encoder;
         this.jwtService = jwtService;
+        this.emailService = emailService;
     }
 
     @PostMapping("/cadastro")
@@ -159,28 +164,54 @@ public class ControleFuncionario {
     }
 
     @PostMapping("/recuperar-senha")
-    public ResponseEntity<?> recuperarSenha(@RequestBody Map<String, String> dados) {
+    public ResponseEntity<?> recuperarSenha(
+            @RequestBody Map<String, String> dados) {
 
         String email = dados.get("email");
 
         if (email == null || email.isBlank()) {
-            return ResponseEntity.badRequest().body("E-mail não informado");
+            return ResponseEntity
+                    .badRequest()
+                    .body("E-mail não informado.");
         }
+
+        email = email.trim().toLowerCase();
 
         Funcionario funcionario = acao.findByEmail(email);
 
         if (funcionario == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("E-mail não encontrado");
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body("E-mail não encontrado.");
         }
 
-        // Gera uma senha temporária de 6 números
-        String senhaTemporaria = String.format("%06d", new java.util.Random().nextInt(100000000));
+        // Gera uma senha temporária de 8 números
+        SecureRandom random = new SecureRandom();
+
+        String senhaTemporaria = String.format(
+                "%08d",
+                random.nextInt(100_000_000)
+        );
 
         // Salva a senha criptografada
-        funcionario.setSenha(encoder.encode(senhaTemporaria));
+        funcionario.setSenha(
+                encoder.encode(senhaTemporaria)
+        );
 
         acao.save(funcionario);
 
-        return ResponseEntity.ok(Map.of("mensagem", "Senha temporária gerada com sucesso","senhaTemporaria", senhaTemporaria));
+        // Envia a senha para o e-mail
+        emailService.enviarSenhaTemporaria(
+                funcionario.getEmail(),
+                funcionario.getNome(),
+                senhaTemporaria
+        );
+
+        return ResponseEntity.ok(
+                Map.of(
+                        "mensagem",
+                        "Uma senha temporária foi enviada para o e-mail cadastrado."
+                )
+        );
     }
 }
