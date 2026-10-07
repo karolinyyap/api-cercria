@@ -87,8 +87,8 @@ public class ControleRelatorio {
                             f.data_admissao,
                             f.data_saida,
                             f.turno,
-                            f.tipoContrato,
-                            f.dataFimContrato,
+                            f.tipo_contrato,
+                            f.data_fim_contrato,
                             f.excluido
                         FROM funcionario f
                         ORDER BY f.nome
