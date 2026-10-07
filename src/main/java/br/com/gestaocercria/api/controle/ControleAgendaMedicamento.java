@@ -24,8 +24,8 @@ public class ControleAgendaMedicamento {
         }
 
         @GetMapping("/listagem")
-        public Iterable<AgendaMedicamento> selecionar() {
-                return acao.findAll();
+        public Iterable<AgendaMedicamento> selecionar(@RequestParam String data) {
+                return acao.findByDataOrderByHorarioAsc(data);
         }
 
         @GetMapping("/{id}")

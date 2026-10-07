@@ -13,4 +13,6 @@ public interface RepositorioAgendaMedicamento extends CrudRepository<AgendaMedic
         String data,
         String status
     );
+
+    List<AgendaMedicamento> findByDataOrderByHorarioAsc(String data);
 }
