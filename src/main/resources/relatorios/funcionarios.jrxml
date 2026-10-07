@@ -110,41 +110,41 @@
 	</title>
 	<pageHeader height="44" splitType="Stretch">
 		<element kind="line" uuid="8c818a56-6137-49e5-86d1-c4056501449b" x="2" y="40" width="550" height="1"/>
-		<element kind="staticText" uuid="859f6d3f-8e35-45c7-b404-c5b2d11a4fbf" x="120" y="7" width="355" height="30" forecolor="#030303" fontName="SansSerif" fontSize="22.0" bold="true" vTextAlign="Middle">
+		<element kind="staticText" uuid="859f6d3f-8e35-45c7-b404-c5b2d11a4fbf" x="2" y="7" width="550" height="30" forecolor="#030303" fontName="SansSerif" fontSize="22.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
 			<text><![CDATA[RELATÓRIO DE FUNCIONÁRIOS]]></text>
 		</element>
 	</pageHeader>
 	<columnHeader splitType="Stretch"/>
 	<detail>
-		<band height="190" splitType="Stretch">
-			<element kind="rectangle" uuid="6064edda-0e1c-467b-bc15-6cf276b478e6" x="10" y="10" width="534" height="160"/>
+		<band height="191" splitType="Stretch">
+			<element kind="rectangle" uuid="6064edda-0e1c-467b-bc15-6cf276b478e6" x="10" y="10" width="534" height="170"/>
 			<element kind="rectangle" uuid="bb81e6c8-c9e3-44bb-945c-fe1ed4518681" x="10" y="10" width="534" height="30" forecolor="#C4C4C4" backcolor="#C4C4C4" mode="Opaque"/>
-			<element kind="line" uuid="d1389f69-b3cb-4130-b4a9-025beebac88e" x="270" y="50" width="1" height="90"/>
+			<element kind="line" uuid="d1389f69-b3cb-4130-b4a9-025beebac88e" x="270" y="50" width="1" height="110"/>
 			<element kind="textField" uuid="c4009e9d-7e7c-411b-b917-9ded247369cb" x="30" y="10" width="500" height="30" fontSize="13.0" vTextAlign="Middle">
 				<expression><![CDATA[$F{nome}]]></expression>
 			</element>
-			<element kind="textField" uuid="e6ac6a25-66f0-4e30-ad33-2eb1fc9d6cd4" x="60" y="70" width="100" height="20" vTextAlign="Middle">
+			<element kind="textField" uuid="e6ac6a25-66f0-4e30-ad33-2eb1fc9d6cd4" x="90" y="70" width="140" height="20" vTextAlign="Middle">
 				<expression><![CDATA[$F{email}]]></expression>
 			</element>
-			<element kind="staticText" uuid="74d32547-e30c-4e92-89d5-9c45570e754b" x="30" y="70" width="30" height="20" vTextAlign="Middle">
+			<element kind="staticText" uuid="74d32547-e30c-4e92-89d5-9c45570e754b" x="30" y="70" width="60" height="20" vTextAlign="Middle">
 				<text><![CDATA[Email:]]></text>
 			</element>
-			<element kind="textField" uuid="3291526f-3647-4f26-af31-14fbd122ebd5" x="130" y="130" width="100" height="20" vTextAlign="Middle">
+			<element kind="textField" uuid="3291526f-3647-4f26-af31-14fbd122ebd5" x="130" y="130" width="100" height="20" pattern="dd/MM/yyyy" vTextAlign="Middle">
 				<expression><![CDATA[$F{data_admissao}]]></expression>
 			</element>
 			<element kind="staticText" uuid="d2884524-1f42-4cff-ac78-3e4b03036b9e" x="30" y="130" width="100" height="20" vTextAlign="Middle">
 				<text><![CDATA[Data de admissão:]]></text>
 			</element>
-			<element kind="textField" uuid="2e1a30a6-08c9-4fb0-894c-6222a329cf2b" x="130" y="90" width="100" height="20" vTextAlign="Middle">
+			<element kind="textField" uuid="2e1a30a6-08c9-4fb0-894c-6222a329cf2b" x="150" y="90" width="100" height="20" pattern="dd/MM/yyyy" vTextAlign="Middle">
 				<expression><![CDATA[$F{data_nascimento}]]></expression>
 			</element>
-			<element kind="staticText" uuid="31723f07-74a9-4afa-9666-c9afa2ddaa80" x="30" y="90" width="100" height="20" vTextAlign="Middle">
+			<element kind="staticText" uuid="31723f07-74a9-4afa-9666-c9afa2ddaa80" x="30" y="90" width="120" height="20" vTextAlign="Middle">
 				<text><![CDATA[Data de nascimento:]]></text>
 			</element>
-			<element kind="textField" uuid="396bc3af-ae7a-4ad8-b787-acc5e9881f1a" x="381" y="130" width="100" height="20" blankWhenNull="true" vTextAlign="Middle">
+			<element kind="textField" uuid="396bc3af-ae7a-4ad8-b787-acc5e9881f1a" x="360" y="130" width="100" height="20" pattern="dd/MM/yyyy" blankWhenNull="true" vTextAlign="Middle">
 				<expression><![CDATA[$F{data_saida}]]></expression>
 			</element>
-			<element kind="staticText" uuid="aed89d95-a0e4-41ce-b5a5-e7fa9aac4917" x="281" y="130" width="100" height="20" vTextAlign="Middle">
+			<element kind="staticText" uuid="aed89d95-a0e4-41ce-b5a5-e7fa9aac4917" x="281" y="130" width="79" height="20" vTextAlign="Middle">
 				<text><![CDATA[Data de saída:]]></text>
 			</element>
 			<element kind="textField" uuid="d8186f2f-6fcf-4929-8709-0a8252ddaa56" x="381" y="50" width="100" height="20" vTextAlign="Middle">
@@ -153,7 +153,7 @@
 			<element kind="staticText" uuid="ecfb2d3e-3adb-462b-accb-d84e774f39b7" x="281" y="50" width="100" height="20" vTextAlign="Middle">
 				<text><![CDATA[Escolaridade:]]></text>
 			</element>
-			<element kind="textField" uuid="fa66fbc6-484b-4624-ac57-347d53b1a998" x="110" y="110" width="40" height="20">
+			<element kind="textField" uuid="fa66fbc6-484b-4624-ac57-347d53b1a998" x="110" y="110" width="40" height="20" vTextAlign="Middle">
 				<expression><![CDATA[$F{orgao_emissor}]]></expression>
 			</element>
 			<element kind="textField" uuid="b6dfc54a-2991-4bf4-8ab6-1f4385d35c2f" x="50" y="110" width="60" height="20" vTextAlign="Middle">
@@ -162,7 +162,7 @@
 			<element kind="staticText" uuid="6b66113a-f85f-4551-82bb-327d1d8b1207" x="30" y="110" width="20" height="20" vTextAlign="Middle">
 				<text><![CDATA[RG:]]></text>
 			</element>
-			<element kind="textField" uuid="19751bf3-fc65-49de-bec4-7a1a190ca6c3" x="150" y="110" width="30" height="20">
+			<element kind="textField" uuid="19751bf3-fc65-49de-bec4-7a1a190ca6c3" x="150" y="110" width="30" height="20" vTextAlign="Middle">
 				<expression><![CDATA[$F{uf}]]></expression>
 			</element>
 			<element kind="textField" uuid="4d43a3a3-2c48-4ac8-8643-c6a52b6f86de" x="381" y="70" width="100" height="20" pattern="(##) #####-####" vTextAlign="Middle">
@@ -189,23 +189,29 @@
 			<element kind="staticText" uuid="c16b8c67-147d-4041-957e-227271a820ae" x="281" y="90" width="40" height="20" vTextAlign="Middle">
 				<text><![CDATA[Cargo:]]></text>
 			</element>
-			<element kind="textField" uuid="7ad0ca74-7ab5-4944-9e9d-40029a64e68e" x="439" y="90" width="42" height="20">
+			<element kind="textField" uuid="7ad0ca74-7ab5-4944-9e9d-40029a64e68e" x="439" y="90" width="42" height="20" vTextAlign="Middle">
 				<expression><![CDATA[$F{carga_horaria}]]></expression>
 			</element>
-			<element kind="staticText" uuid="94d7f59d-223e-4ba8-a140-308ba0fbe530" x="415" y="90" width="24" height="20">
+			<element kind="staticText" uuid="94d7f59d-223e-4ba8-a140-308ba0fbe530" x="415" y="90" width="24" height="20" vTextAlign="Middle">
 				<text><![CDATA[CH:]]></text>
+			</element>
+			<element kind="textField" uuid="9497acd2-79d9-42f8-bd82-de00ce511600" x="130" y="150" width="100" height="20">
+				<expression><![CDATA[$F{excluido} ? "Sim" : "Não"]]></expression>
+			</element>
+			<element kind="staticText" uuid="29225931-5b35-400d-8842-d3fa07fc43a3" x="30" y="150" width="100" height="20">
+				<text><![CDATA[Desabilitado: ]]></text>
 			</element>
 		</band>
 	</detail>
 	<columnFooter splitType="Stretch"/>
 	<pageFooter height="31" splitType="Stretch">
-		<element kind="textField" uuid="5253a67b-32c5-41f0-a0c5-cfde53cb9dba" x="520" y="0" width="39" height="30">
+		<element kind="textField" uuid="5253a67b-32c5-41f0-a0c5-cfde53cb9dba" x="520" y="0" width="39" height="30" vTextAlign="Middle">
 			<expression><![CDATA[$V{PAGE_NUMBER}]]></expression>
 		</element>
 		<element kind="textField" uuid="3c2f9c2b-9111-4758-af9f-7de4687d8410" x="0" y="0" width="100" height="30" pattern="dd/MM/yyyy">
 			<expression><![CDATA[new java.util.Date()]]></expression>
 		</element>
-		<element kind="textField" uuid="7428efad-5049-4993-810a-f5840af271bc" x="100" y="0" width="100" height="30" pattern="HH:mm">
+		<element kind="textField" uuid="7428efad-5049-4993-810a-f5840af271bc" x="100" y="0" width="100" height="30" pattern="HH:mm" vTextAlign="Middle">
 			<expression><![CDATA[new java.util.Date()]]></expression>
 		</element>
 	</pageFooter>

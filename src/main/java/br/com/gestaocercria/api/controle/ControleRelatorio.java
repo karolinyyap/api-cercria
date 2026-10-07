@@ -57,7 +57,8 @@ public class ControleRelatorio {
                             a.cor_pele,
                             a.deficiencia,
                             a.ppcaam,
-                            a.alergias
+                            a.alergias,
+                            a.excluido
                         FROM acolhido a
                         ORDER BY a.nome
                         """;
@@ -87,7 +88,8 @@ public class ControleRelatorio {
                             f.data_saida,
                             f.turno,
                             f.tipoContrato,
-                            f.dataFimContrato
+                            f.dataFimContrato,
+                            f.excluido
                         FROM funcionario f
                         ORDER BY f.nome
                         """;
@@ -103,6 +105,7 @@ public class ControleRelatorio {
                             e.data,
                             e.hora,
                             e.descricao,
+                            e.excluido,
 
                             (
                                 SELECT STRING_AGG(
@@ -138,9 +141,9 @@ public class ControleRelatorio {
                         SELECT
                             p.nome,
                             p.categoria,
-                            p.unidade_medida
+                            p.unidade_medida,
+                            p.excluido
                         FROM produto p
-                        WHERE p.excluido = false
                         ORDER BY p.nome
                         """;
 
@@ -155,9 +158,9 @@ public class ControleRelatorio {
                         SELECT
                             p.tombamento,
                             p.especificacao,
-                            p.dt_aquisicao
+                            p.dt_aquisicao,
+                            p.excluido
                         FROM patrimonio p
-                        WHERE p.excluido = false
                         ORDER BY p.tombamento
                         """;
 
@@ -171,7 +174,8 @@ public class ControleRelatorio {
                         SELECT
                             m.nome,
                             m.categoria,
-                            m.unidade_medida
+                            m.unidade_medida,
+                            m.excluido
                         FROM medicamento m
                         ORDER BY m.nome
                         """;
