@@ -76,7 +76,7 @@
 		<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
 	</columnHeader>
 	<detail>
-		<band height="43" splitType="Stretch">
+		<band height="31" splitType="Stretch">
 			<element kind="line" uuid="e7fa94a6-46a4-4bb6-a94c-d13dbeb12001" x="2" y="0" width="1" height="31"/>
 			<element kind="line" uuid="c5a3c4fb-8178-4048-8c60-4445ab27a5bb" x="551" y="0" width="1" height="31"/>
 			<element kind="line" uuid="0b46091c-7a66-4fb7-817b-d880f2b81682" x="120" y="0" width="1" height="31"/>

@@ -99,8 +99,8 @@
 		<element kind="line" uuid="3098cd75-997c-4108-8450-d7b6c142363b" x="385" y="-1" width="1" height="37"/>
 		<element kind="line" uuid="71b60c31-66e9-45b6-8dff-dd253797ce86" x="290" y="0" width="1" height="36"/>
 		<element kind="line" uuid="063bb5d9-7751-43a6-97d1-aabf088e961c" x="190" y="0" width="1" height="33"/>
-		<element kind="line" uuid="be0cca85-8f33-4d66-94f9-65b4c795b0b1" x="139" y="-1" width="1" height="36"/>
-		<element kind="line" uuid="6c305e02-d943-487f-bf11-80c93e6b9b32" x="80" y="0" width="1" height="35"/>
+		<element kind="line" uuid="be0cca85-8f33-4d66-94f9-65b4c795b0b1" x="139" y="-1" width="1" height="37"/>
+		<element kind="line" uuid="6c305e02-d943-487f-bf11-80c93e6b9b32" x="80" y="0" width="1" height="36"/>
 		<element kind="line" uuid="470dcc63-1239-43db-ab22-6df220776dd5" x="2" y="0" width="1" height="36"/>
 		<element kind="line" uuid="7bd0a404-0675-484a-a018-200aef3c7b90" x="484" y="0" width="1" height="36"/>
 		<element kind="staticText" uuid="b36b1592-696b-470a-803e-a895094b9da7" x="484" y="3" width="67" height="30" stretchType="NoStretch" fontSize="8.0" hTextAlign="Center" vTextAlign="Middle">
@@ -111,7 +111,7 @@
 		<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
 	</columnHeader>
 	<detail>
-		<band height="48" splitType="Stretch">
+		<band height="41" splitType="Stretch">
 			<element kind="line" uuid="9ef8ee6e-7c3e-4f11-bd71-d60edf702202" x="2" y="0" width="550" height="1"/>
 			<element kind="textField" uuid="dd22bb04-a27e-400e-b013-ad1bda4200e1" x="3" y="3" width="77" height="37" hTextAlign="Center" vTextAlign="Middle">
 				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="99a56694-e564-4def-813c-0e4120671a96"/>

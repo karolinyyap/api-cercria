@@ -81,14 +81,14 @@
 		<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
 	</columnHeader>
 	<detail>
-		<band height="49" splitType="Stretch">
+		<band height="33" splitType="Stretch">
 			<element kind="line" uuid="e7fa94a6-46a4-4bb6-a94c-d13dbeb12001" x="2" y="0" width="1" height="32"/>
 			<element kind="line" uuid="c5a3c4fb-8178-4048-8c60-4445ab27a5bb" x="551" y="0" width="1" height="32"/>
 			<element kind="textField" uuid="5b866c53-4687-48b3-94c2-75b4bd958a8f" x="3" y="1" width="126" height="30" hTextAlign="Center" vTextAlign="Middle">
 				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="ae0da181-d2b9-41e7-8a82-ae6d65c8bf67"/>
 				<expression><![CDATA[$F{nome}]]></expression>
 			</element>
-			<element kind="textField" uuid="6583d82f-93e6-405d-9884-2aa8556b8084" x="131" y="3" width="159" height="30" hTextAlign="Center" vTextAlign="Middle">
+			<element kind="textField" uuid="6583d82f-93e6-405d-9884-2aa8556b8084" x="131" y="1" width="159" height="30" hTextAlign="Center" vTextAlign="Middle">
 				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="143214b7-a72b-48d5-93a2-b97ce87d4291"/>
 				<expression><![CDATA[$F{categoria}]]></expression>
 			</element>
