@@ -88,14 +88,14 @@
 		<property name="com.jaspersoft.studio.field.label" value="nome"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="acolhido"/>
 	</field>
-	<field name="medicamentos" class="java.sql.Array">
-		<property name="com.jaspersoft.studio.field.name" value="medicamentos"/>
-		<property name="com.jaspersoft.studio.field.label" value="medicamentos"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="acolhido"/>
-	</field>
 	<field name="excluido" class="java.lang.Boolean">
 		<property name="com.jaspersoft.studio.field.name" value="excluido"/>
 		<property name="com.jaspersoft.studio.field.label" value="excluido"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="acolhido"/>
+	</field>
+	<field name="alergias" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="alergias"/>
+		<property name="com.jaspersoft.studio.field.label" value="alergias"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="acolhido"/>
 	</field>
 	<background splitType="Stretch"/>
@@ -153,13 +153,13 @@
 			<element kind="staticText" uuid="5d3ffd90-fe76-4e4f-a2c3-0146a24a3021" x="20" y="90" width="100" height="20" vTextAlign="Middle">
 				<text><![CDATA[Data de entrada:]]></text>
 			</element>
-			<element kind="textField" uuid="57790978-b80b-4149-8b7a-2a8edb7880e7" x="80" y="180" width="130" height="20" blankWhenNull="true" vTextAlign="Middle">
+			<element kind="textField" uuid="57790978-b80b-4149-8b7a-2a8edb7880e7" x="80" y="180" width="180" height="40" blankWhenNull="true" vTextAlign="Middle">
 				<expression><![CDATA[$F{deficiencia} == null ? "Não se aplica" : $F{deficiencia}]]></expression>
 			</element>
 			<element kind="staticText" uuid="b40b1b85-c307-4290-a65c-bb394bbe7e20" x="20" y="180" width="60" height="20" vTextAlign="Middle">
 				<text><![CDATA[Deficiência:]]></text>
 			</element>
-			<element kind="textField" uuid="7a0954d9-72a8-4ec9-b9e7-13ae791b78e3" x="340" y="158" width="159" height="25" blankWhenNull="true" vTextAlign="Middle">
+			<element kind="textField" uuid="7a0954d9-72a8-4ec9-b9e7-13ae791b78e3" x="340" y="158" width="184" height="25" blankWhenNull="true" vTextAlign="Middle">
 				<expression><![CDATA[$F{ppcaam} == null ? "Não se aplica" : $F{ppcaam}]]></expression>
 			</element>
 			<element kind="staticText" uuid="ea4a63d0-ab82-4f13-96d0-7796bf1dc807" x="290" y="158" width="50" height="25" vTextAlign="Middle">
@@ -189,23 +189,23 @@
 			<element kind="staticText" uuid="5254b986-373b-4114-b92e-270aa6aac646" x="291" y="50" width="29" height="20" vTextAlign="Middle">
 				<text><![CDATA[Vara:]]></text>
 			</element>
-			<element kind="textField" uuid="13ad1c7a-4d92-44cd-824c-a3e9c7807ed4" x="380" y="183" width="119" height="20" blankWhenNull="true" vTextAlign="Middle">
-				<expression><![CDATA[$F{medicamentos}]]></expression>
-			</element>
-			<element kind="staticText" uuid="7d16e6e6-6333-460a-a5c8-c4c6ebd7bfe0" x="290" y="183" width="90" height="20" vTextAlign="Middle">
-				<text><![CDATA[Medicamentos:]]></text>
-			</element>
 			<element kind="textField" uuid="7b400df6-ecc4-4a07-90d9-bb3503e90e17" x="390" y="110" width="133" height="20" pattern="dd/MM/yyyy" blankWhenNull="true" vTextAlign="Middle">
 				<expression><![CDATA[$F{data_saida} ]]></expression>
 			</element>
 			<element kind="staticText" uuid="550f4306-69cd-4fc9-9576-ec0a56ad43b8" x="290" y="110" width="100" height="20" vTextAlign="Middle">
 				<text><![CDATA[Data de saída: ]]></text>
 			</element>
-			<element kind="textField" uuid="3ae59ef0-4f3c-4e63-9826-6da7ba147224" x="90" y="200" width="100" height="20">
+			<element kind="textField" uuid="3ae59ef0-4f3c-4e63-9826-6da7ba147224" x="360" y="200" width="100" height="20">
 				<expression><![CDATA[$F{excluido} ? "Sim" : "Não"]]></expression>
 			</element>
-			<element kind="staticText" uuid="21dc0876-f0b4-4b4a-a691-471e8cf33984" x="20" y="200" width="70" height="20">
+			<element kind="staticText" uuid="21dc0876-f0b4-4b4a-a691-471e8cf33984" x="290" y="200" width="70" height="20">
 				<text><![CDATA[Desacolhido: ]]></text>
+			</element>
+			<element kind="textField" uuid="9afa674d-fe16-43e8-8fe5-4c464461df44" x="340" y="183" width="184" height="16">
+				<expression><![CDATA[$F{alergias} == null ? "Não se aplica" : $F{alergias}]]></expression>
+			</element>
+			<element kind="staticText" uuid="c3a85ec6-bdb0-4ab2-a592-21019149aec4" x="291" y="183" width="48" height="16">
+				<text><![CDATA[Alergias:]]></text>
 			</element>
 		</band>
 	</detail>
