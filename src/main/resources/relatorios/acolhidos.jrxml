@@ -202,7 +202,6 @@
 				<text><![CDATA[Data de saída: ]]></text>
 			</element>
 			<element kind="textField" uuid="3ae59ef0-4f3c-4e63-9826-6da7ba147224" x="90" y="200" width="100" height="20">
-				<printWhenExpression><![CDATA[$F{excluido} ? "Sim" : "Não"]]></printWhenExpression>
 				<expression><![CDATA[$F{excluido} ? "Sim" : "Não"]]></expression>
 			</element>
 			<element kind="staticText" uuid="21dc0876-f0b4-4b4a-a691-471e8cf33984" x="20" y="200" width="70" height="20">
